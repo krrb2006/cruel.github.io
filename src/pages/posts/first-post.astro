@@ -1,71 +1,245 @@
 ---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
 const base = import.meta.env.BASE_URL;
 ---
 
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>我的第一篇博客</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-        background: #0b1120;
-        color: #f8fafc;
+<SiteLayout title="我的第一篇博客" description="博客上线后的第一篇文章">
+  <style>
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0 16px;
+      color: #fff0c7;
+      font-weight: 800;
+    }
+
+    .article-shell {
+      padding: 34px;
+    }
+
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .meta-chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+    }
+
+    .article-title {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 1.08;
+    }
+
+    .article-lead {
+      margin-top: 16px;
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.95;
+      font-size: 18px;
+    }
+
+    .cover-card {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 26px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 98, 166, 0.18),
+        rgba(255, 216, 77, 0.14),
+        rgba(89, 227, 255, 0.14),
+        rgba(143, 124, 255, 0.14)
+      );
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cover-card strong {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .cover-card p {
+      margin: 0;
+      color: #fff8dc;
+      line-height: 1.9;
+    }
+
+    .article-content {
+      margin-top: 28px;
+      max-width: 760px;
+    }
+
+    .article-content h2 {
+      margin: 34px 0 12px;
+      font-size: 30px;
+    }
+
+    .article-content p {
+      margin: 0 0 18px;
+      color: #f5f7ff;
+      line-height: 2;
+      font-size: 18px;
+    }
+
+    .article-content ul {
+      margin: 0 0 18px;
+      padding-left: 20px;
+    }
+
+    .article-content li {
+      color: #f5f7ff;
+      line-height: 2;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .article-content blockquote {
+      margin: 24px 0;
+      padding: 18px 20px;
+      border-left: 4px solid #ffd84d;
+      border-radius: 0 18px 18px 0;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff4c9;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+
+    .article-content code {
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      font-family: Consolas, monospace;
+      font-size: 15px;
+    }
+
+    .note-box {
+      margin: 24px 0;
+      padding: 18px 20px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .note-box strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .note-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    @media (max-width: 780px) {
+      .article-shell {
+        padding: 24px;
       }
 
-      .wrap {
-        width: min(760px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 40px 0 80px;
+      .article-content p,
+      .article-content li,
+      .article-content blockquote {
+        font-size: 17px;
       }
+    }
+  </style>
 
-      a {
-        color: #93c5fd;
-        text-decoration: none;
-      }
+  <a class="back-link" href={base}>← 返回首页</a>
 
-      article {
-        line-height: 1.95;
-        font-size: 18px;
-      }
+  <article class="panel article-shell">
+    <div class="article-meta">
+      <span class="meta-chip">2026-04-03</span>
+      <span class="meta-chip">阅读约 3 分钟</span>
+      <span class="meta-chip">建站记录</span>
+      <span class="meta-chip">成长日志</span>
+    </div>
 
-      h1 {
-        font-size: 40px;
-        margin-bottom: 8px;
-      }
+    <h1 class="article-title">我的第一篇博客</h1>
 
-      .meta {
-        color: #94a3b8;
-        margin-bottom: 28px;
-      }
+    <div class="article-lead">
+      这是我博客真正上线后的第一篇文章。它不只是一个页面，更像是我从“想做点什么”
+      到“真的把它做出来了”的第一个证明。
+    </div>
 
-      p {
-        color: #e2e8f0;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="wrap">
-      <p><a href={base}>← 返回首页</a></p>
+    <div class="cover-card">
+      <strong>从 0 开始，也能做出自己的博客</strong>
+      <p>
+        我原本并不会搭博客，也不熟悉 GitHub、Astro 和部署流程。
+        但当我真的一步一步做下来之后，我发现最重要的不是起点高不高，而是有没有开始。
+      </p>
+    </div>
 
-      <article>
-        <h1>我的第一篇博客</h1>
-        <div class="meta">这是我博客上线后的第一篇文章</div>
+    <div class="article-content">
+      <h2>为什么我想做这个博客</h2>
+      <p>
+        我想要一个真正属于自己的地方。不是社交平台，不是临时发点东西的地方，
+        而是一个可以长期记录学习、积累想法、展示成长的网站。
+      </p>
 
-        <p>今天，我终于把自己的博客搭起来了。</p>
+      <p>
+        它可以写代码学习，可以写做项目时遇到的问题，也可以写我对生活的一些想法。
+        它会慢慢变成一个更完整、更像我自己的空间。
+      </p>
 
-        <p>以前我总觉得建博客是一件很难的事，好像要懂很多技术、很多命令、很多配置。</p>
+      <h2>刚开始时我最怕什么</h2>
+      <p>
+        一开始我最怕的是“我什么都不会”。我担心命令看不懂、文件找不到、部署报错、
+        页面很丑，甚至连一个按钮都做不好。
+      </p>
 
-        <p>但真正一步一步做下来，我发现最重要的不是“我会不会”，而是“我愿不愿意开始”。</p>
+      <blockquote>
+        但后来我发现，很多东西并不是“会了才开始”，而是“开始了才慢慢会”。
+      </blockquote>
 
-        <p>这个博客以后会记录我一路成长的痕迹。</p>
+      <p>
+        当我把第一个页面改出来、把博客推上 GitHub、真的在浏览器里打开它时，
+        那种感觉非常直接：原来我也可以做成。
+      </p>
 
-        <p>这是开始。</p>
+      <h2>我希望以后这里会留下什么</h2>
+      <ul>
+        <li>前端学习时的真实笔记</li>
+        <li>做网站过程中的踩坑记录</li>
+        <li>页面风格尝试和设计变化</li>
+        <li>我一步一步成长起来的痕迹</li>
+      </ul>
 
-        <p>一如既往</p>
-      </article>
-    </main>
-  </body>
-</html>
+      <div class="note-box">
+        <strong>现在这个博客还只是开始</strong>
+        <p>
+          后面我还会继续加更多页面、更多文章、更好的排版和更明显的个人风格。
+          我希望它最终不只是“能打开”，而是“看起来就像一件作品”。
+        </p>
+      </div>
+
+      <h2>写在最后</h2>
+      <p>
+        这篇文章不长，但它对我来说很重要。它标记了一个很明确的时刻：
+        我开始认真地做自己的博客，开始把脑子里的想法真正放到网页上。
+      </p>
+
+      <p>
+        接下来，我会继续更新这里，也继续升级这个站。
+        这是开始，不是结束。
+      </p>
+
+      <p>
+        现在我已经会用 <code>git add</code>、<code>git commit</code>、
+        <code>git push</code> 去更新它了。以后我会让它越来越像我真正想要的样子。
+      </p>
+    </div>
+  </article>
+</SiteLayout>

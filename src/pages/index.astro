@@ -1,200 +1,384 @@
 ---
-const base = import.meta.env.BASE_URL;
-const blogName = "Cruel Blog";
-const tagline = "记录学习、折腾与成长";
-const intro = "这是我的个人博客。我会在这里分享编程学习、建站过程、踩坑记录和生活思考。";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { site } from "../data/site";
 
-const posts = [
+const base = import.meta.env.BASE_URL;
+const avatarUrl = `${base}${site.avatar}`;
+
+const featuredPost = {
+  title: "我的第一篇博客",
+  desc: "从 0 开始，我终于把博客真正搭上线了。这篇文章记录了我的开始，也记录了我第一次认真把一个属于自己的网页做出来。",
+  href: `${base}posts/first-post/`,
+};
+
+const stats = [
+  { label: "当前主题", value: "多巴胺博客" },
+  { label: "正在建设", value: "个人品牌感" },
+  { label: "当前状态", value: "持续升级中" },
+];
+
+const cards = [
   {
-    title: "我的第一篇博客",
-    desc: "从 0 开始，我终于把博客真正搭上线了。",
-    href: `${base}posts/first-post/`,
+    title: "我现在在学什么",
+    text: "Git、GitHub、Astro、HTML、CSS，还有怎么让一个网站变得越来越像真正的作品。",
+  },
+  {
+    title: "这个博客会写什么",
+    text: "学习笔记、建站过程、踩坑记录、生活想法，以及我认真完成一件事时留下的痕迹。",
+  },
+  {
+    title: "我想把它做成什么样",
+    text: "我想把这里做成一个有记忆点、有审美、有温度，别人一眼就能记住的个人博客。",
   },
 ];
 ---
 
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{blogName}</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #0b1020;
-        --card: rgba(255, 255, 255, 0.08);
-        --text: #f5f7ff;
-        --muted: #aab3c5;
-        --line: rgba(255, 255, 255, 0.12);
-        --accent: #7c9cff;
+<SiteLayout title="首页" description="多巴胺风格的个人博客首页">
+  <style>
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 22px;
+      margin-top: 8px;
+    }
+
+    .hero-main {
+      padding: 42px;
+    }
+
+    .hero-title {
+      margin: 18px 0 0;
+      font-size: clamp(54px, 9vw, 100px);
+      line-height: 0.92;
+      letter-spacing: -2px;
+      font-weight: 900;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #ffffff, #ffd9ef, #ffd84d, #59e3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      margin-top: 18px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff4c9;
+    }
+
+    .hero-desc {
+      margin-top: 18px;
+      max-width: 720px;
+      font-size: 18px;
+      line-height: 1.95;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .hero-tags {
+      margin-top: 24px;
+    }
+
+    .profile-card {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .avatar-ring {
+      width: 126px;
+      height: 126px;
+      padding: 4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff62a6, #ffd84d, #59e3ff, #8f7cff);
+      box-shadow: 0 18px 40px rgba(255, 98, 166, 0.22);
+      margin-bottom: 16px;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #161b37;
+    }
+
+    .nickname {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .role {
+      font-weight: 800;
+      color: #fff0c7;
+      margin-bottom: 12px;
+    }
+
+    .profile-intro {
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-weight: 800;
+      transition: 0.22s ease;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .social-mail {
+      color: #1c1020;
+      background: linear-gradient(135deg, #ffd84d, #ff9f43);
+    }
+
+    .social-github {
+      color: white;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .status-boxes {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .status-box {
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fce8ff;
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 22px 0 28px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 98, 166, 0.14),
+        rgba(89, 227, 255, 0.09),
+        rgba(255, 216, 77, 0.12)
+      );
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 22px;
+    }
+
+    .feature-card {
+      padding: 28px;
+    }
+
+    .feature-title {
+      margin: 0 0 12px;
+      font-size: 32px;
+    }
+
+    .feature-desc {
+      color: var(--muted);
+      line-height: 1.95;
+      font-size: 17px;
+    }
+
+    .readmore {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      color: #fff0c7;
+      font-weight: 900;
+    }
+
+    .color-line {
+      height: 6px;
+      margin-top: 22px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff62a6, #ff9f43, #ffd84d, #59e3ff, #8f7cff);
+    }
+
+    .mini-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .mini-card {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.04)
+      );
+      box-shadow: var(--shadow);
+      transition: 0.22s ease;
+    }
+
+    .mini-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .mini-card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    @media (max-width: 960px) {
+      .hero,
+      .content-grid,
+      .stats {
+        grid-template-columns: 1fr;
       }
 
-      * {
-        box-sizing: border-box;
+      .hero-main,
+      .profile-card,
+      .feature-card {
+        padding: 24px;
       }
 
-      body {
-        margin: 0;
-        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-        background:
-          radial-gradient(circle at top left, rgba(124,156,255,0.25), transparent 30%),
-          linear-gradient(180deg, #0b1020 0%, #11182d 100%);
-        color: var(--text);
+      .hero-title {
+        letter-spacing: -1px;
       }
+    }
+  </style>
 
-      .wrap {
-        width: min(1000px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 24px 0 80px;
-      }
+  <section class="hero">
+    <article class="panel hero-main">
+      <div class="pill">多巴胺主页 · 背景图 + 特效版</div>
 
-      .nav {
-        display: flex;
-        gap: 16px;
-        justify-content: flex-end;
-        margin-bottom: 40px;
-      }
+      <h1 class="hero-title">
+        <span>{site.nickname}</span>
+      </h1>
 
-      .nav a {
-        color: var(--text);
-        text-decoration: none;
-        opacity: 0.9;
-      }
+      <div class="hero-subtitle">{site.role}</div>
 
-      .nav a:hover {
-        color: var(--accent);
-      }
+      <div class="hero-desc">{site.intro}</div>
 
-      .hero {
-        padding: 56px 32px;
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-      }
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={featuredPost.href}>阅读第一篇文章</a>
+        <a class="btn btn-secondary" href={`${base}about/`}>进入 About 页面</a>
+      </div>
 
-      .tag {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: rgba(124,156,255,0.18);
-        color: #dbe3ff;
-        font-size: 14px;
-        margin-bottom: 18px;
-      }
+      <div class="chip-list hero-tags">
+        {site.tags.map((tag) => <span class="chip">{tag}</span>)}
+      </div>
+    </article>
 
-      h1 {
-        font-size: clamp(36px, 7vw, 64px);
-        margin: 0 0 14px;
-      }
-
-      .tagline {
-        font-size: 22px;
-        color: #dbe3ff;
-        margin-bottom: 14px;
-      }
-
-      .intro {
-        font-size: 17px;
-        line-height: 1.8;
-        color: var(--muted);
-        max-width: 720px;
-      }
-
-      .actions {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-        margin-top: 28px;
-      }
-
-      .btn {
-        display: inline-block;
-        padding: 12px 18px;
-        border-radius: 14px;
-        text-decoration: none;
-        font-weight: 600;
-      }
-
-      .btn-primary {
-        background: var(--accent);
-        color: white;
-      }
-
-      .btn-secondary {
-        border: 1px solid var(--line);
-        color: var(--text);
-        background: rgba(255,255,255,0.04);
-      }
-
-      .section {
-        margin-top: 34px;
-      }
-
-      .section h2 {
-        font-size: 28px;
-        margin-bottom: 16px;
-      }
-
-      .card {
-        border: 1px solid var(--line);
-        background: var(--card);
-        border-radius: 20px;
-        padding: 22px;
-      }
-
-      .card h3 {
-        margin-top: 0;
-        margin-bottom: 10px;
-      }
-
-      .card p {
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .card a {
-        color: #cdd8ff;
-        text-decoration: none;
-      }
-
-      .card a:hover {
-        color: white;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="wrap">
-      <nav class="nav">
-        <a href={base}>首页</a>
-        <a href={`${base}about/`}>关于</a>
-      </nav>
-
-      <section class="hero">
-        <div class="tag">我的个人博客</div>
-        <h1>{blogName}</h1>
-        <div class="tagline">{tagline}</div>
-        <div class="intro">{intro}</div>
-
-        <div class="actions">
-          <a class="btn btn-primary" href={`${base}posts/first-post/`}>读第一篇文章</a>
-          <a class="btn btn-secondary" href={`${base}about/`}>认识一下我</a>
+    <aside class="panel profile-card">
+      <div>
+        <div class="avatar-ring">
+          <img class="avatar" src={avatarUrl} alt={`${site.nickname} 的头像`} />
         </div>
-      </section>
 
-      <section class="section">
-        <h2>最新文章</h2>
-        {
-          posts.map((post) => (
-            <article class="card">
-              <h3>{post.title}</h3>
-              <p>{post.desc}</p>
-              <a href={post.href}>阅读全文 →</a>
-            </article>
-          ))
-        }
-      </section>
-    </main>
-  </body>
-</html>
+        <div class="nickname">{site.nickname}</div>
+        <div class="role">{site.role}</div>
+        <div class="profile-intro">{site.intro}</div>
+
+        <div class="socials">
+          <a class="social-btn social-mail" href={`mailto:${site.email}`}>📮 邮箱</a>
+          <a
+            class="social-btn social-github"
+            href={site.github}
+            target="_blank"
+            rel="noreferrer"
+          >
+            💻 GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="status-boxes">
+        <div class="status-box">现在正在把这个博客做得更有记忆点</div>
+        <div class="status-box">目标：好看、灵动、像真正属于自己的作品</div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="stats">
+    {
+      stats.map((item) => (
+        <div class="stat">
+          <div class="stat-label">{item.label}</div>
+          <div class="stat-value">{item.value}</div>
+        </div>
+      ))
+    }
+  </section>
+
+  <h2 class="section-title">最近更新</h2>
+
+  <section class="content-grid">
+    <article class="panel feature-card">
+      <h3 class="feature-title">{featuredPost.title}</h3>
+      <div class="feature-desc">{featuredPost.desc}</div>
+      <a class="readmore" href={featuredPost.href}>阅读全文 →</a>
+      <div class="color-line"></div>
+    </article>
+
+    <div class="mini-grid">
+      {
+        cards.map((card) => (
+          <article class="mini-card">
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</SiteLayout>

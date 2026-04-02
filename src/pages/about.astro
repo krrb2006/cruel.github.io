@@ -1,60 +1,236 @@
 ---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { site } from "../data/site";
+
 const base = import.meta.env.BASE_URL;
+const avatarUrl = `${base}${site.avatar}`;
+
+const timeline = [
+  {
+    title: "开始学习",
+    text: "从不会 Git、不会部署，到真正把博客上线，这是我认真开始做网站的起点。",
+  },
+  {
+    title: "开始追求风格",
+    text: "不满足于能用，我开始在意颜色、排版、层次和页面的记忆点。",
+  },
+  {
+    title: "开始长期记录",
+    text: "我希望这个网站以后不只是页面，而是能一直留下成长痕迹的地方。",
+  },
+];
 ---
 
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>关于我</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-        background: #0f172a;
-        color: #f8fafc;
+<SiteLayout title="关于我" description="关于我、我的学习方向和这个博客">
+  <style>
+    .about-hero {
+      padding: 34px;
+      margin-top: 8px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .profile-side,
+    .content-side {
+      display: grid;
+      gap: 22px;
+    }
+
+    .avatar-ring {
+      width: 118px;
+      height: 118px;
+      padding: 4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff62a6, #ffd84d, #59e3ff, #8f7cff);
+      margin-bottom: 14px;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+      background: #161b37;
+    }
+
+    .about-name {
+      font-size: 36px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .about-role {
+      color: #fff0c7;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .about-text {
+      color: var(--muted);
+      line-height: 1.95;
+      font-size: 17px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .contact-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 700;
+    }
+
+    .contact-item a {
+      color: #fff0c7;
+    }
+
+    .content-card {
+      padding: 26px;
+    }
+
+    .content-card h2 {
+      margin: 0 0 12px;
+      font-size: 26px;
+    }
+
+    .content-card p,
+    .content-card li {
+      color: var(--muted);
+      line-height: 1.95;
+      font-size: 16px;
+    }
+
+    .content-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 18px 18px 18px 22px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 22px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff62a6, #59e3ff);
+      box-shadow: 0 0 14px rgba(89, 227, 255, 0.6);
+    }
+
+    .timeline-item h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    @media (max-width: 960px) {
+      .about-grid {
+        grid-template-columns: 1fr;
       }
 
-      .wrap {
-        width: min(800px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 40px 0 80px;
+      .about-hero,
+      .content-card {
+        padding: 24px;
       }
+    }
+  </style>
 
-      a {
-        color: #93c5fd;
-        text-decoration: none;
-      }
+  <section class="panel about-hero">
+    <div class="pill">About 页面 · 同一套高级风格</div>
+    <h1 style="margin: 18px 0 10px; font-size: clamp(42px, 7vw, 72px);">
+      关于 <span style="color: #ffd84d;">{site.nickname}</span>
+    </h1>
+    <p class="about-text" style="max-width: 760px;">
+      我正在学习前端、建站和页面设计，也在练习把一个想法慢慢做成像样的作品。
+      这个博客会记录我从新手开始，一点一点把自己的网站做漂亮、做完整的过程。
+    </p>
+  </section>
 
-      .card {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 20px;
-        padding: 28px;
-        line-height: 1.9;
-      }
+  <section class="about-grid">
+    <div class="profile-side">
+      <article class="panel content-card">
+        <div class="avatar-ring">
+          <img class="avatar" src={avatarUrl} alt={`${site.nickname} 的头像`} />
+        </div>
 
-      h1 {
-        margin-top: 0;
-      }
+        <div class="about-name">{site.nickname}</div>
+        <div class="about-role">{site.role}</div>
+        <div class="about-text">{site.intro}</div>
 
-      p {
-        color: #cbd5e1;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="wrap">
-      <p><a href={base}>← 返回首页</a></p>
+        <div class="contact-list">
+          <div class="contact-item">
+            📮 邮箱：
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </div>
+          <div class="contact-item">
+            💻 GitHub：
+            <a href={site.github} target="_blank" rel="noreferrer">{site.github}</a>
+          </div>
+        </div>
+      </article>
 
-      <section class="card">
-        <h1>关于我</h1>
-        <p>你好，我是载酒寻歌。</p>
-        <p>CTF小白 | 持之以恒的学习者</p>
-        <p>这里会写：</p>
-        <p>1. 我的生活碎片<br />2. 我的成长日记<br />3. 一些阿巴阿巴</p>
-        <p>Welcome to my world</p>
-      </section>
-    </main>
-  </body>
-</html>
+      <article class="panel content-card">
+        <h2>这个博客会写什么</h2>
+        <ul>
+          <li>前端学习笔记</li>
+          <li>搭建博客时踩过的坑</li>
+          <li>页面美化与风格尝试</li>
+          <li>生活想法和成长记录</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="content-side">
+      <article class="panel content-card">
+        <h2>我现在在做什么</h2>
+        <p>
+          我正在练习 Git、GitHub、Astro、页面布局和样式设计。
+          我不只是想把博客搭出来，我还想把它做成一个有风格、有人味、能代表我自己的空间。
+        </p>
+      </article>
+
+      <article class="panel content-card">
+        <h2>我的成长路线</h2>
+        <div class="timeline">
+          {
+            timeline.map((item) => (
+              <div class="timeline-item">
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            ))
+          }
+        </div>
+      </article>
+    </div>
+  </section>
+</SiteLayout>

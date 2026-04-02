@@ -1,0 +1,425 @@
+---
+import { site } from "../data/site";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = site.intro } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const bgUrl = `${base}${site.background}`;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | {site.blogName}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ff6aa9" />
+
+    <style>
+      :root {
+        --bg-deep: #090a1a;
+        --bg-mid: #10142d;
+        --surface: rgba(19, 22, 43, 0.62);
+        --surface-strong: rgba(27, 31, 58, 0.78);
+        --line: rgba(255, 255, 255, 0.12);
+        --text: #ffffff;
+        --muted: #d7d9ef;
+        --pink: #ff62a6;
+        --orange: #ff9f43;
+        --yellow: #ffd84d;
+        --green: #86ff7a;
+        --cyan: #59e3ff;
+        --blue: #71a7ff;
+        --violet: #8f7cff;
+        --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
+        --mx: 50vw;
+        --my: 20vh;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(circle at 12% 10%, rgba(255, 98, 166, 0.18), transparent 20%),
+          radial-gradient(circle at 86% 18%, rgba(89, 227, 255, 0.14), transparent 22%),
+          radial-gradient(circle at 70% 78%, rgba(255, 216, 77, 0.12), transparent 20%),
+          linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deep) 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            420px circle at var(--mx) var(--my),
+            rgba(255, 255, 255, 0.12),
+            transparent 58%
+          );
+        z-index: 0;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(8, 10, 27, 0.55), rgba(8, 10, 27, 0.72)),
+          var(--bg-image);
+        background-size: cover;
+        background-position: center;
+        opacity: 0.35;
+        z-index: 0;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .bg-orb {
+        position: fixed;
+        border-radius: 999px;
+        filter: blur(56px);
+        opacity: 0.35;
+        pointer-events: none;
+        z-index: 0;
+        animation: float 9s ease-in-out infinite;
+      }
+
+      .bg-orb-1 {
+        width: 240px;
+        height: 240px;
+        top: 90px;
+        left: -40px;
+        background: var(--pink);
+      }
+
+      .bg-orb-2 {
+        width: 220px;
+        height: 220px;
+        top: 180px;
+        right: 20px;
+        background: var(--cyan);
+        animation-delay: -3s;
+      }
+
+      .bg-orb-3 {
+        width: 280px;
+        height: 280px;
+        bottom: 40px;
+        right: -60px;
+        background: var(--orange);
+        animation-delay: -6s;
+      }
+
+      .site-wrap {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 24px 0 88px;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 12px;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(19, 22, 43, 0.46);
+        backdrop-filter: blur(16px);
+        box-shadow: var(--shadow);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+      }
+
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(135deg, var(--pink), var(--orange), var(--cyan));
+        box-shadow: 0 12px 30px rgba(255, 98, 166, 0.22);
+      }
+
+      .brand-text {
+        font-size: 20px;
+        letter-spacing: 0.4px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .nav a {
+        color: var(--muted);
+        font-weight: 700;
+        transition: 0.2s ease;
+      }
+
+      .nav a:hover {
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.05)
+        );
+        backdrop-filter: blur(18px);
+        box-shadow: var(--shadow);
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 98, 166, 0.16),
+          rgba(255, 216, 77, 0.06),
+          rgba(89, 227, 255, 0.08),
+          rgba(143, 124, 255, 0.08)
+        );
+      }
+
+      .panel > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #fff2fb;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        font-weight: 800;
+        border: 1px solid transparent;
+        transition: 0.22s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-primary {
+        color: #140f1e;
+        background: linear-gradient(135deg, var(--yellow), var(--pink), var(--orange));
+        box-shadow: 0 16px 30px rgba(255, 120, 155, 0.22);
+      }
+
+      .btn-secondary {
+        color: white;
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .btn-cyan {
+        color: #07111b;
+        background: linear-gradient(135deg, var(--cyan), #9ff6ff);
+      }
+
+      .chip-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        padding: 9px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--line);
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .section-title {
+        margin: 28px 0 18px;
+        font-size: 34px;
+      }
+
+      .footer {
+        margin-top: 40px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        color: #c4c9e3;
+        font-size: 14px;
+      }
+
+      .click-burst {
+        position: fixed;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .click-particle {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        margin-left: -6px;
+        margin-top: -6px;
+        border-radius: 999px;
+        background: radial-gradient(circle, var(--yellow), var(--pink));
+        box-shadow: 0 0 18px rgba(255, 216, 77, 0.5);
+        animation: pop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        animation-delay: var(--delay);
+      }
+
+      @keyframes pop {
+        to {
+          transform: translate(var(--dx), var(--dy)) scale(0);
+          opacity: 0;
+        }
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-18px);
+        }
+      }
+
+      @media (max-width: 900px) {
+        .site-header {
+          border-radius: 26px;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .brand-text {
+          font-size: 18px;
+        }
+
+        .section-title {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+
+  <body style={`--bg-image: url('${bgUrl}')`}>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+
+    <div class="site-wrap">
+      <header class="site-header">
+        <a class="brand" href={base}>
+          <span class="brand-mark">C</span>
+          <span class="brand-text">{site.blogName}</span>
+        </a>
+
+        <nav class="nav">
+          <a href={base}>首页</a>
+          <a href={`${base}about/`}>关于</a>
+          <a href={`${base}posts/first-post/`}>文章</a>
+        </nav>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="footer">
+        Built by {site.nickname} · Powered by Astro & GitHub Pages
+      </footer>
+    </div>
+
+    <script is:inline>
+      const root = document.documentElement;
+
+      window.addEventListener("mousemove", (event) => {
+        root.style.setProperty("--mx", event.clientX + "px");
+        root.style.setProperty("--my", event.clientY + "px");
+      });
+
+      window.addEventListener("click", (event) => {
+        const burst = document.createElement("div");
+        burst.className = "click-burst";
+        burst.style.left = event.clientX + "px";
+        burst.style.top = event.clientY + "px";
+
+        const total = 12;
+
+        for (let i = 0; i < total; i++) {
+          const dot = document.createElement("span");
+          dot.className = "click-particle";
+
+          const angle = (Math.PI * 2 * i) / total;
+          const distance = 38 + Math.random() * 34;
+
+          dot.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+          dot.style.setProperty("--dy", Math.sin(angle) * distance + "px");
+          dot.style.setProperty("--delay", Math.random() * 0.04 + "s");
+
+          burst.appendChild(dot);
+        }
+
+        document.body.appendChild(burst);
+        setTimeout(() => burst.remove(), 800);
+      });
+    </script>
+  </body>
+</html>
