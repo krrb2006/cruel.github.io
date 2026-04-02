@@ -1,11 +1,200 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL;
+const blogName = "Cruel Blog";
+const tagline = "记录学习、折腾与成长";
+const intro = "这是我的个人博客。我会在这里分享编程学习、建站过程、踩坑记录和生活思考。";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const posts = [
+  {
+    title: "我的第一篇博客",
+    desc: "从 0 开始，我终于把博客真正搭上线了。",
+    href: `${base}posts/first-post/`,
+  },
+];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{blogName}</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1020;
+        --card: rgba(255, 255, 255, 0.08);
+        --text: #f5f7ff;
+        --muted: #aab3c5;
+        --line: rgba(255, 255, 255, 0.12);
+        --accent: #7c9cff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(124,156,255,0.25), transparent 30%),
+          linear-gradient(180deg, #0b1020 0%, #11182d 100%);
+        color: var(--text);
+      }
+
+      .wrap {
+        width: min(1000px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 24px 0 80px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+        margin-bottom: 40px;
+      }
+
+      .nav a {
+        color: var(--text);
+        text-decoration: none;
+        opacity: 0.9;
+      }
+
+      .nav a:hover {
+        color: var(--accent);
+      }
+
+      .hero {
+        padding: 56px 32px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(124,156,255,0.18);
+        color: #dbe3ff;
+        font-size: 14px;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        font-size: clamp(36px, 7vw, 64px);
+        margin: 0 0 14px;
+      }
+
+      .tagline {
+        font-size: 22px;
+        color: #dbe3ff;
+        margin-bottom: 14px;
+      }
+
+      .intro {
+        font-size: 17px;
+        line-height: 1.8;
+        color: var(--muted);
+        max-width: 720px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 18px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .btn-secondary {
+        border: 1px solid var(--line);
+        color: var(--text);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .section {
+        margin-top: 34px;
+      }
+
+      .section h2 {
+        font-size: 28px;
+        margin-bottom: 16px;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 20px;
+        padding: 22px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+      }
+
+      .card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .card a {
+        color: #cdd8ff;
+        text-decoration: none;
+      }
+
+      .card a:hover {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <nav class="nav">
+        <a href={base}>首页</a>
+        <a href={`${base}about/`}>关于</a>
+      </nav>
+
+      <section class="hero">
+        <div class="tag">我的个人博客</div>
+        <h1>{blogName}</h1>
+        <div class="tagline">{tagline}</div>
+        <div class="intro">{intro}</div>
+
+        <div class="actions">
+          <a class="btn btn-primary" href={`${base}posts/first-post/`}>读第一篇文章</a>
+          <a class="btn btn-secondary" href={`${base}about/`}>认识一下我</a>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>最新文章</h2>
+        {
+          posts.map((post) => (
+            <article class="card">
+              <h3>{post.title}</h3>
+              <p>{post.desc}</p>
+              <a href={post.href}>阅读全文 →</a>
+            </article>
+          ))
+        }
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于我</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #0f172a;
+        color: #f8fafc;
+      }
+
+      .wrap {
+        width: min(800px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 80px;
+      }
+
+      a {
+        color: #93c5fd;
+        text-decoration: none;
+      }
+
+      .card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 28px;
+        line-height: 1.9;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      p {
+        color: #cbd5e1;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p><a href={base}>← 返回首页</a></p>
+
+      <section class="card">
+        <h1>关于我</h1>
+        <p>你好，我是载酒寻歌。</p>
+        <p>CTF小白 | 持之以恒的学习者</p>
+        <p>这里会写：</p>
+        <p>1. 我的生活碎片<br />2. 我的成长日记<br />3. 一些阿巴阿巴</p>
+        <p>Welcome to my world</p>
+      </section>
+    </main>
+  </body>
+</html>

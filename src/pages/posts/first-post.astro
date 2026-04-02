@@ -1,0 +1,71 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的第一篇博客</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #0b1120;
+        color: #f8fafc;
+      }
+
+      .wrap {
+        width: min(760px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 80px;
+      }
+
+      a {
+        color: #93c5fd;
+        text-decoration: none;
+      }
+
+      article {
+        line-height: 1.95;
+        font-size: 18px;
+      }
+
+      h1 {
+        font-size: 40px;
+        margin-bottom: 8px;
+      }
+
+      .meta {
+        color: #94a3b8;
+        margin-bottom: 28px;
+      }
+
+      p {
+        color: #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p><a href={base}>← 返回首页</a></p>
+
+      <article>
+        <h1>我的第一篇博客</h1>
+        <div class="meta">这是我博客上线后的第一篇文章</div>
+
+        <p>今天，我终于把自己的博客搭起来了。</p>
+
+        <p>以前我总觉得建博客是一件很难的事，好像要懂很多技术、很多命令、很多配置。</p>
+
+        <p>但真正一步一步做下来，我发现最重要的不是“我会不会”，而是“我愿不愿意开始”。</p>
+
+        <p>这个博客以后会记录我一路成长的痕迹。</p>
+
+        <p>这是开始。</p>
+
+        <p>一如既往</p>
+      </article>
+    </main>
+  </body>
+</html>
