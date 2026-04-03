@@ -11,65 +11,84 @@ const featuredPost = {
   href: `${base}posts/first-post/`,
 };
 
+const highlights = [
+  "我正在把博客做成自己的作品",
+  "我在练代码，也在练审美",
+  "这个网站会持续进化",
+  "这里会留下我的成长痕迹",
+];
+
 const stats = [
-  { label: "当前主题", value: "多巴胺博客" },
-  { label: "正在建设", value: "个人品牌感" },
-  { label: "当前状态", value: "持续升级中" },
+  { label: "当前风格", value: "多巴胺创意站" },
+  { label: "个人状态", value: site.status },
+  { label: "更新方向", value: "更酷的视觉体验" },
 ];
 
 const cards = [
   {
     title: "我现在在学什么",
-    text: "Git、GitHub、Astro、HTML、CSS，还有怎么让一个网站变得越来越像真正的作品。",
+    text: "Git、GitHub、Astro、HTML、CSS，还有怎么让一个网页既好看又有自己的气质。",
   },
   {
     title: "这个博客会写什么",
-    text: "学习笔记、建站过程、踩坑记录、生活想法，以及我认真完成一件事时留下的痕迹。",
+    text: "学习笔记、建站过程、踩坑记录、页面设计尝试，以及我认真做成一件事之后的记录。",
   },
   {
     title: "我想把它做成什么样",
-    text: "我想把这里做成一个有记忆点、有审美、有温度，别人一眼就能记住的个人博客。",
+    text: "我想把这里做成一个有记忆点、有风格、有温度，别人一眼就能记住的个人博客。",
   },
 ];
 ---
 
-<SiteLayout title="首页" description="多巴胺风格的个人博客首页">
+<SiteLayout title="首页" description={site.intro}>
   <style>
     .hero {
       display: grid;
-      grid-template-columns: 1.25fr 0.95fr;
+      grid-template-columns: 1.18fr 0.92fr;
       gap: 22px;
       margin-top: 8px;
     }
 
     .hero-main {
-      padding: 42px;
+      padding: 44px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff4c9;
     }
 
     .hero-title {
-      margin: 18px 0 0;
-      font-size: clamp(54px, 9vw, 100px);
+      margin: 18px 0 10px;
+      font-size: clamp(56px, 9vw, 104px);
       line-height: 0.92;
       letter-spacing: -2px;
       font-weight: 900;
     }
 
     .hero-title span {
-      background: linear-gradient(135deg, #ffffff, #ffd9ef, #ffd84d, #59e3ff);
+      background: linear-gradient(135deg, #ffffff, #ffd5ea, #ffd84d, #64eaff, #8b7cff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
     .hero-subtitle {
-      margin-top: 18px;
       font-size: 24px;
-      font-weight: 800;
-      color: #fff4c9;
+      font-weight: 900;
+      color: #fff1c2;
+      margin-bottom: 14px;
     }
 
     .hero-desc {
-      margin-top: 18px;
       max-width: 720px;
       font-size: 18px;
       line-height: 1.95;
@@ -84,14 +103,37 @@ const cards = [
     }
 
     .hero-tags {
+      margin-top: 22px;
+    }
+
+    .hero-note-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
       margin-top: 24px;
     }
 
-    .profile-card {
+    .hero-note {
+      padding: 16px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 700;
+      color: #fff2fb;
+    }
+
+    .profile-panel {
       padding: 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      gap: 18px;
+    }
+
+    .profile-top {
+      display: flex;
+      gap: 16px;
+      align-items: center;
     }
 
     .avatar-ring {
@@ -99,30 +141,46 @@ const cards = [
       height: 126px;
       padding: 4px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #ff62a6, #ffd84d, #59e3ff, #8f7cff);
-      box-shadow: 0 18px 40px rgba(255, 98, 166, 0.22);
-      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ff5fa2, #ffd84d, #64eaff, #8b7cff);
+      box-shadow: 0 18px 40px rgba(255, 95, 162, 0.24);
+      flex: 0 0 auto;
     }
 
     .avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      object-fit: cover;
       display: block;
+      object-fit: cover;
       background: #161b37;
     }
 
-    .nickname {
+    .profile-name {
       font-size: 32px;
       font-weight: 900;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .role {
-      font-weight: 800;
+    .profile-role {
       color: #fff0c7;
-      margin-bottom: 12px;
+      font-weight: 800;
+      line-height: 1.7;
+    }
+
+    .profile-motto {
+      padding: 18px 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 95, 162, 0.14),
+        rgba(255, 216, 77, 0.1),
+        rgba(100, 234, 255, 0.08)
+      );
+      font-size: 18px;
+      line-height: 1.8;
+      color: #fff6d6;
+      font-weight: 800;
     }
 
     .profile-intro {
@@ -133,27 +191,26 @@ const cards = [
     .socials {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
+      gap: 10px;
     }
 
-    .social-btn {
+    .social-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 12px 16px;
       border-radius: 14px;
-      font-weight: 800;
+      font-weight: 900;
       transition: 0.22s ease;
     }
 
-    .social-btn:hover {
+    .social-link:hover {
       transform: translateY(-2px);
     }
 
     .social-mail {
-      color: #1c1020;
-      background: linear-gradient(135deg, #ffd84d, #ff9f43);
+      color: #1b1023;
+      background: linear-gradient(135deg, #ffd84d, #ff9b42);
     }
 
     .social-github {
@@ -162,18 +219,12 @@ const cards = [
       background: rgba(255, 255, 255, 0.05);
     }
 
-    .status-boxes {
-      display: grid;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .status-box {
+    .profile-box {
       padding: 14px 16px;
       border-radius: 18px;
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.05);
-      color: #fce8ff;
+      color: #ffeef8;
       font-weight: 700;
     }
 
@@ -190,9 +241,9 @@ const cards = [
       border: 1px solid var(--line);
       background: linear-gradient(
         135deg,
-        rgba(255, 98, 166, 0.14),
-        rgba(89, 227, 255, 0.09),
-        rgba(255, 216, 77, 0.12)
+        rgba(255, 95, 162, 0.12),
+        rgba(255, 216, 77, 0.12),
+        rgba(100, 234, 255, 0.1)
       );
       box-shadow: var(--shadow);
     }
@@ -218,9 +269,13 @@ const cards = [
       padding: 28px;
     }
 
+    .feature-badge {
+      margin-bottom: 16px;
+    }
+
     .feature-title {
       margin: 0 0 12px;
-      font-size: 32px;
+      font-size: 34px;
     }
 
     .feature-desc {
@@ -238,11 +293,11 @@ const cards = [
       font-weight: 900;
     }
 
-    .color-line {
+    .rainbow-line {
       height: 6px;
       margin-top: 22px;
       border-radius: 999px;
-      background: linear-gradient(90deg, #ff62a6, #ff9f43, #ffd84d, #59e3ff, #8f7cff);
+      background: linear-gradient(90deg, #ff5fa2, #ff9b42, #ffd84d, #64eaff, #8b7cff);
     }
 
     .mini-grid {
@@ -286,9 +341,18 @@ const cards = [
       }
 
       .hero-main,
-      .profile-card,
+      .profile-panel,
       .feature-card {
         padding: 24px;
+      }
+
+      .hero-note-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-top {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
       .hero-title {
@@ -299,7 +363,7 @@ const cards = [
 
   <section class="hero">
     <article class="panel hero-main">
-      <div class="pill">多巴胺主页 · 背景图 + 特效版</div>
+      <div class="hero-badge">创意首页 · 多巴胺升级版</div>
 
       <h1 class="hero-title">
         <span>{site.nickname}</span>
@@ -312,40 +376,47 @@ const cards = [
       <div class="hero-actions">
         <a class="btn btn-primary" href={featuredPost.href}>阅读第一篇文章</a>
         <a class="btn btn-secondary" href={`${base}about/`}>进入 About 页面</a>
+        <a class="btn btn-cyan" href={`mailto:${site.email}`}>联系我</a>
       </div>
 
       <div class="chip-list hero-tags">
         {site.tags.map((tag) => <span class="chip">{tag}</span>)}
       </div>
+
+      <div class="hero-note-grid">
+        {highlights.map((item) => <div class="hero-note">{item}</div>)}
+      </div>
     </article>
 
-    <aside class="panel profile-card">
-      <div>
+    <aside class="panel profile-panel">
+      <div class="profile-top">
         <div class="avatar-ring">
           <img class="avatar" src={avatarUrl} alt={`${site.nickname} 的头像`} />
         </div>
 
-        <div class="nickname">{site.nickname}</div>
-        <div class="role">{site.role}</div>
-        <div class="profile-intro">{site.intro}</div>
-
-        <div class="socials">
-          <a class="social-btn social-mail" href={`mailto:${site.email}`}>📮 邮箱</a>
-          <a
-            class="social-btn social-github"
-            href={site.github}
-            target="_blank"
-            rel="noreferrer"
-          >
-            💻 GitHub
-          </a>
+        <div>
+          <div class="profile-name">{site.nickname}</div>
+          <div class="profile-role">{site.introShort}</div>
         </div>
       </div>
 
-      <div class="status-boxes">
-        <div class="status-box">现在正在把这个博客做得更有记忆点</div>
-        <div class="status-box">目标：好看、灵动、像真正属于自己的作品</div>
+      <div class="profile-motto">{site.motto}</div>
+
+      <div class="profile-intro">{site.intro}</div>
+
+      <div class="socials">
+        <a class="social-link social-mail" href={`mailto:${site.email}`}>📮 邮箱</a>
+        <a
+          class="social-link social-github"
+          href={site.github}
+          target="_blank"
+          rel="noreferrer"
+        >
+          💻 GitHub
+        </a>
       </div>
+
+      <div class="profile-box">现在的位置：{site.location} · 状态：{site.status}</div>
     </aside>
   </section>
 
@@ -364,10 +435,11 @@ const cards = [
 
   <section class="content-grid">
     <article class="panel feature-card">
+      <div class="pill feature-badge">Featured Post</div>
       <h3 class="feature-title">{featuredPost.title}</h3>
       <div class="feature-desc">{featuredPost.desc}</div>
       <a class="readmore" href={featuredPost.href}>阅读全文 →</a>
-      <div class="color-line"></div>
+      <div class="rainbow-line"></div>
     </article>
 
     <div class="mini-grid">

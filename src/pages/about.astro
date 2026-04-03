@@ -7,71 +7,73 @@ const avatarUrl = `${base}${site.avatar}`;
 
 const timeline = [
   {
-    title: "开始学习",
-    text: "从不会 Git、不会部署，到真正把博客上线，这是我认真开始做网站的起点。",
+    title: "开始搭博客",
+    text: "从不会 Git、不会部署，到真的把博客发布上线，这是我认真开始做网站的起点。",
   },
   {
     title: "开始追求风格",
-    text: "不满足于能用，我开始在意颜色、排版、层次和页面的记忆点。",
+    text: "我不再满足于网页能打开，而是开始在意颜色、层次、排版和页面的记忆点。",
   },
   {
     title: "开始长期记录",
-    text: "我希望这个网站以后不只是页面，而是能一直留下成长痕迹的地方。",
+    text: "我希望这里最后不只是几个页面，而是一个能长期留下成长痕迹的空间。",
   },
+];
+
+const principles = [
+  "做能代表自己的网页",
+  "让设计感和代码一起进步",
+  "把每一次尝试都留下来",
 ];
 ---
 
 <SiteLayout title="关于我" description="关于我、我的学习方向和这个博客">
   <style>
-    .about-hero {
-      padding: 34px;
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 22px;
       margin-top: 8px;
     }
 
-    .about-grid {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 22px;
-      margin-top: 22px;
-    }
-
-    .profile-side,
-    .content-side {
-      display: grid;
-      gap: 22px;
+    .profile-card,
+    .content-card {
+      padding: 30px;
     }
 
     .avatar-ring {
-      width: 118px;
-      height: 118px;
+      width: 124px;
+      height: 124px;
       padding: 4px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #ff62a6, #ffd84d, #59e3ff, #8f7cff);
-      margin-bottom: 14px;
+      background: linear-gradient(135deg, #ff5fa2, #ffd84d, #64eaff, #8b7cff);
+      box-shadow: 0 18px 40px rgba(255, 95, 162, 0.22);
+      margin-bottom: 16px;
     }
 
     .avatar {
       width: 100%;
       height: 100%;
+      border-radius: 50%;
       display: block;
       object-fit: cover;
-      border-radius: 50%;
       background: #161b37;
     }
 
-    .about-name {
-      font-size: 36px;
+    .name {
+      font-size: 38px;
       font-weight: 900;
       margin-bottom: 8px;
     }
 
-    .about-role {
+    .role {
       color: #fff0c7;
       font-weight: 800;
       margin-bottom: 12px;
+      line-height: 1.8;
     }
 
-    .about-text {
+    .intro {
       color: var(--muted);
       line-height: 1.95;
       font-size: 17px;
@@ -88,20 +90,49 @@ const timeline = [
       border-radius: 18px;
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.05);
-      font-weight: 700;
+      font-weight: 800;
+      color: #fff2fb;
     }
 
     .contact-item a {
       color: #fff0c7;
+      word-break: break-all;
     }
 
-    .content-card {
-      padding: 26px;
+    .badge-list {
+      margin-top: 18px;
+    }
+
+    .hero-card {
+      padding: 34px;
+      margin-bottom: 22px;
+    }
+
+    .hero-title {
+      margin: 16px 0 10px;
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1;
+    }
+
+    .hero-title span {
+      color: #ffd84d;
+    }
+
+    .hero-text {
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.95;
+      font-size: 17px;
+    }
+
+    .content-stack {
+      display: grid;
+      gap: 22px;
     }
 
     .content-card h2 {
       margin: 0 0 12px;
-      font-size: 26px;
+      font-size: 28px;
     }
 
     .content-card p,
@@ -137,8 +168,8 @@ const timeline = [
       width: 6px;
       height: 6px;
       border-radius: 999px;
-      background: linear-gradient(135deg, #ff62a6, #59e3ff);
-      box-shadow: 0 0 14px rgba(89, 227, 255, 0.6);
+      background: linear-gradient(135deg, #ff5fa2, #64eaff);
+      box-shadow: 0 0 14px rgba(100, 234, 255, 0.6);
     }
 
     .timeline-item h3 {
@@ -148,8 +179,6 @@ const timeline = [
 
     .timeline-item p {
       margin: 0;
-      color: var(--muted);
-      line-height: 1.9;
     }
 
     @media (max-width: 960px) {
@@ -157,45 +186,58 @@ const timeline = [
         grid-template-columns: 1fr;
       }
 
-      .about-hero,
+      .hero-card,
+      .profile-card,
       .content-card {
         padding: 24px;
       }
     }
   </style>
 
-  <section class="panel about-hero">
-    <div class="pill">About 页面 · 同一套高级风格</div>
-    <h1 style="margin: 18px 0 10px; font-size: clamp(42px, 7vw, 72px);">
-      关于 <span style="color: #ffd84d;">{site.nickname}</span>
+  <section class="panel hero-card">
+    <div class="pill">About Page · 同一套视觉系统</div>
+    <h1 class="hero-title">
+      关于 <span>{site.nickname}</span>
     </h1>
-    <p class="about-text" style="max-width: 760px;">
-      我正在学习前端、建站和页面设计，也在练习把一个想法慢慢做成像样的作品。
+    <p class="hero-text">
+      我正在学习前端、建站和页面设计，也在练习怎么把一个想法慢慢做成真正有质感的作品。
       这个博客会记录我从新手开始，一点一点把自己的网站做漂亮、做完整的过程。
     </p>
   </section>
 
   <section class="about-grid">
-    <div class="profile-side">
+    <div class="panel profile-card">
+      <div class="avatar-ring">
+        <img class="avatar" src={avatarUrl} alt={`${site.nickname} 的头像`} />
+      </div>
+
+      <div class="name">{site.nickname}</div>
+      <div class="role">{site.role}</div>
+      <div class="intro">{site.intro}</div>
+
+      <div class="contact-list">
+        <div class="contact-item">
+          📮 邮箱：<a href={`mailto:${site.email}`}>{site.email}</a>
+        </div>
+        <div class="contact-item">
+          💻 GitHub：
+          <a href={site.github} target="_blank" rel="noreferrer">{site.github}</a>
+        </div>
+        <div class="contact-item">📍 所在地：{site.location}</div>
+      </div>
+
+      <div class="chip-list badge-list">
+        {principles.map((item) => <span class="chip">{item}</span>)}
+      </div>
+    </div>
+
+    <div class="content-stack">
       <article class="panel content-card">
-        <div class="avatar-ring">
-          <img class="avatar" src={avatarUrl} alt={`${site.nickname} 的头像`} />
-        </div>
-
-        <div class="about-name">{site.nickname}</div>
-        <div class="about-role">{site.role}</div>
-        <div class="about-text">{site.intro}</div>
-
-        <div class="contact-list">
-          <div class="contact-item">
-            📮 邮箱：
-            <a href={`mailto:${site.email}`}>{site.email}</a>
-          </div>
-          <div class="contact-item">
-            💻 GitHub：
-            <a href={site.github} target="_blank" rel="noreferrer">{site.github}</a>
-          </div>
-        </div>
+        <h2>我现在在做什么</h2>
+        <p>
+          我正在练 Git、GitHub、Astro、页面布局和样式设计。
+          我不只是想把博客搭出来，我还想把它做成一个有风格、有人味、能代表我自己的空间。
+        </p>
       </article>
 
       <article class="panel content-card">
@@ -206,16 +248,6 @@ const timeline = [
           <li>页面美化与风格尝试</li>
           <li>生活想法和成长记录</li>
         </ul>
-      </article>
-    </div>
-
-    <div class="content-side">
-      <article class="panel content-card">
-        <h2>我现在在做什么</h2>
-        <p>
-          我正在练习 Git、GitHub、Astro、页面布局和样式设计。
-          我不只是想把博客搭出来，我还想把它做成一个有风格、有人味、能代表我自己的空间。
-        </p>
       </article>
 
       <article class="panel content-card">
