@@ -1,5 +1,5 @@
 export const site = {
-  blogName: "Cruel Blog",
+  blogName: "花间来信",
   nickname: "lkr",
   initials: "L",
   role: "前端学习者 · 正在把审美和代码练到同一水平",

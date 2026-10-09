@@ -1,0 +1,33 @@
+/* Shared literary palette. Loaded as a stylesheet so every route stays coherent. */
+html:root{--paper:#faf7f2;--paper-deep:#eee7df;--ink:#393730;--muted:#777267;--forest:#8d615d;--forest-dark:#63584e;--lime:#eadbd2;--orange:#a7786f;--rose:#9d6b67;--line:#dcd4c8;--white:#fffdfa;--radius:2px;--shadow:none;--serif:'Noto Serif SC','Songti SC','STSong','SimSun',Georgia,serif;--sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif}
+html body{background:var(--paper);font-family:var(--sans);color:var(--ink)}
+body .page-shell{width:min(1080px,calc(100% - 64px))}
+body .site-header{padding:28px 0 0;background:rgba(250,247,242,.95);backdrop-filter:blur(12px)}
+body .nav-shell{border:0;border-radius:0;box-shadow:none;background:transparent;backdrop-filter:none;padding:0 0 23px;min-height:65px;gap:16px}
+body .brand{gap:12px;font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:.08em}
+body .brand-mark{background:transparent;color:var(--rose);box-shadow:none;font-size:32px;width:34px;height:38px;border-radius:0}
+body .brand-sub{font-family:var(--sans);font-size:8px;letter-spacing:.17em;font-weight:400;margin-top:4px}
+body .nav{gap:18px}
+body .nav a{font-size:12px;letter-spacing:.07em;font-weight:400;padding:8px 0;border-radius:0}
+body .nav a:hover,body .nav a[aria-current=page]{background:transparent;color:var(--rose)}
+body .nav a[aria-current=page]{box-shadow:0 1px var(--rose)}
+body .nav .nav-github,body .nav .nav-github:hover{margin-left:10px;color:var(--muted);background:transparent}
+body main{padding:0 0 24px}
+body .footer{grid-template-columns:1fr auto 1fr;margin-top:30px;padding:25px 0 36px;font-size:10px;letter-spacing:.05em}
+body .footer-mark{font-size:25px;color:var(--rose);background:transparent}
+body .footer-links{font-size:11px;font-weight:400}
+body .panel{box-shadow:none;border-radius:2px}
+body .pill,body .eyebrow{font-size:10px;letter-spacing:.18em;font-weight:500}
+body .chip,body .meta-chip{font-weight:400;border-radius:2px}
+body .btn{border-radius:2px;font-weight:500;box-shadow:none}
+body .panel.about-copy{background:#eee6e0;color:var(--ink)}
+body .about-copy .lead{color:var(--muted)}
+body .about-copy .eyebrow,body .about-copy .about-sign{color:var(--rose)}
+body .about-copy h1{font-family:var(--serif);font-weight:400;letter-spacing:0;font-size:clamp(44px,6vw,76px)}
+body .panel.about-copy h1 em{color:var(--rose)}
+body .quote-card{background:#f2ede6}
+body .article-title,body .prose h2,body .story-block h3,body .about-aside h2{font-family:var(--serif);font-weight:400}
+body .article-title{font-size:clamp(32px,5vw,54px);line-height:1.5}
+body .prose p,body .prose li{font-size:17px;line-height:2.1}
+body .author-avatar{background:var(--paper-deep)}
+@media(max-width:640px){body .page-shell{width:calc(100% - 36px)}body .site-header{padding-top:18px}body .nav-shell{padding-bottom:16px}body .brand{font-size:19px;gap:4px}body .brand-sub{display:none}body .nav{gap:12px}body .nav a{font-size:11px}body .nav .nav-github{padding:8px 0;margin-left:0}body .brand-mark{width:27px}body .footer{grid-template-columns:1fr auto;font-size:9px}body .footer-links{display:none}}

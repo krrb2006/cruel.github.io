@@ -1,5 +1,6 @@
 ---
 import { site } from "../data/site";
+import "../styles/journal.css";
 
 interface Props {
   title: string;
@@ -22,7 +23,7 @@ const isPost = Astro.url.pathname.includes("/posts");
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f4f1e9" />
+    <meta name="theme-color" content="#faf7f2" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
@@ -325,10 +326,10 @@ const isPost = Astro.url.pathname.includes("/posts");
     <header class="site-header page-shell">
       <div class="nav-shell">
         <a class="brand" href={base} aria-label={`${site.blogName} 首页`}>
-          <span class="brand-mark">L</span>
+          <span class="brand-mark" aria-hidden="true">l.</span>
           <span>
             <span>{site.blogName}</span>
-            <span class="brand-sub">Creative notebook</span>
+            <span class="brand-sub">Letters & little things</span>
           </span>
         </a>
 
@@ -346,8 +347,8 @@ const isPost = Astro.url.pathname.includes("/posts");
     </main>
 
     <footer class="footer page-shell">
-      <span>© {new Date().getFullYear()} {site.nickname} · 持续学习，持续创造</span>
-      <span class="footer-mark" aria-hidden="true">L</span>
+      <span>© {new Date().getFullYear()} {site.nickname} · 花有花期，人有自己的节奏</span>
+      <span class="footer-mark" aria-hidden="true">l.</span>
       <span class="footer-links">
         <a href={`mailto:${site.email}`}>Email</a>
         <a href={site.github} target="_blank" rel="noreferrer">GitHub</a>
