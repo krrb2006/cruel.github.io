@@ -2,7 +2,9 @@
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { site } from "../../data/site";
 
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 const avatarUrl = `${base}${site.avatar}`;
 ---
 
@@ -16,7 +18,7 @@ const avatarUrl = `${base}${site.avatar}`;
     }
 
     .article-card {
-      padding: 34px;
+      padding: clamp(26px, 5vw, 54px);
     }
 
     .meta-row {
@@ -31,7 +33,7 @@ const avatarUrl = `${base}${site.avatar}`;
       border-radius: 999px;
       font-size: 14px;
       font-weight: 800;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(36, 75, 54, 0.06);
       border: 1px solid var(--line);
     }
 
@@ -53,13 +55,12 @@ const avatarUrl = `${base}${site.avatar}`;
       margin-top: 24px;
       padding: 24px;
       border-radius: 26px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--line);
       background: linear-gradient(
         135deg,
-        rgba(255, 95, 162, 0.18),
-        rgba(255, 216, 77, 0.14),
-        rgba(100, 234, 255, 0.14),
-        rgba(139, 124, 255, 0.14)
+        rgba(217, 240, 107, 0.36),
+        rgba(255, 254, 250, 0.6),
+        rgba(231, 120, 62, 0.12)
       );
     }
 
@@ -71,7 +72,7 @@ const avatarUrl = `${base}${site.avatar}`;
 
     .cover-box p {
       margin: 0;
-      color: #fff8dc;
+      color: var(--forest-dark);
       line-height: 1.9;
     }
 
@@ -87,7 +88,7 @@ const avatarUrl = `${base}${site.avatar}`;
 
     .prose p {
       margin: 0 0 18px;
-      color: #f5f7ff;
+      color: var(--ink);
       line-height: 2;
       font-size: 18px;
     }
@@ -98,7 +99,7 @@ const avatarUrl = `${base}${site.avatar}`;
       line-height: 0.95;
       padding-right: 10px;
       font-weight: 900;
-      color: #ffd84d;
+      color: var(--orange);
     }
 
     .prose ul {
@@ -107,7 +108,7 @@ const avatarUrl = `${base}${site.avatar}`;
     }
 
     .prose li {
-      color: #f5f7ff;
+      color: var(--ink);
       line-height: 2;
       font-size: 18px;
       margin-bottom: 4px;
@@ -116,10 +117,10 @@ const avatarUrl = `${base}${site.avatar}`;
     .prose blockquote {
       margin: 24px 0;
       padding: 18px 20px;
-      border-left: 4px solid #ffd84d;
+      border-left: 4px solid var(--orange);
       border-radius: 0 18px 18px 0;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff4c9;
+      background: rgba(36, 75, 54, 0.06);
+      color: var(--forest-dark);
       font-size: 18px;
       line-height: 1.9;
     }
@@ -127,7 +128,7 @@ const avatarUrl = `${base}${site.avatar}`;
     .prose code {
       padding: 3px 8px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(36, 75, 54, 0.08);
       font-family: Consolas, monospace;
       font-size: 15px;
     }
@@ -137,7 +138,7 @@ const avatarUrl = `${base}${site.avatar}`;
       padding: 18px 20px;
       border-radius: 22px;
       border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(217, 240, 107, 0.16);
     }
 
     .note-box strong {
@@ -182,7 +183,7 @@ const avatarUrl = `${base}${site.avatar}`;
       height: 60px;
       padding: 3px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #ff5fa2, #ffd84d, #64eaff);
+      background: linear-gradient(135deg, var(--forest-dark), var(--lime));
       flex: 0 0 auto;
     }
 
@@ -221,7 +222,7 @@ const avatarUrl = `${base}${site.avatar}`;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: #fff0c7;
+      color: var(--forest-dark);
       font-weight: 900;
       margin-bottom: 16px;
     }

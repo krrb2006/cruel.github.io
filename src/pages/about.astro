@@ -2,265 +2,171 @@
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { site } from "../data/site";
 
-const base = import.meta.env.BASE_URL;
-const avatarUrl = `${base}${site.avatar}`;
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const portrait = `${base}${site.avatar}`;
 
 const timeline = [
-  {
-    title: "开始搭博客",
-    text: "从不会 Git、不会部署，到真的把博客发布上线，这是我认真开始做网站的起点。",
-  },
-  {
-    title: "开始追求风格",
-    text: "我不再满足于网页能打开，而是开始在意颜色、层次、排版和页面的记忆点。",
-  },
-  {
-    title: "开始长期记录",
-    text: "我希望这里最后不只是几个页面，而是一个能长期留下成长痕迹的空间。",
-  },
-];
-
-const principles = [
-  "做能代表自己的网页",
-  "让设计感和代码一起进步",
-  "把每一次尝试都留下来",
+  { year: "起点", title: "把网站发布出来", text: "从 Git 和部署开始，完成第一个真正在线的个人页面。" },
+  { year: "现在", title: "让代码与审美一起进步", text: "学习 Astro、页面布局、响应式设计，也开始在意表达是否清晰。" },
+  { year: "接下来", title: "用作品建立自己的坐标", text: "继续写、继续做，把这里变成一份长期、真实的成长档案。" },
 ];
 ---
 
-<SiteLayout title="关于我" description="关于我、我的学习方向和这个博客">
+<SiteLayout title="关于我" description="关于 lkr、正在学习的方向和这个博客">
   <style>
+    .about-hero {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 18px;
+    }
+
+    .about-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 520px;
+      padding: clamp(30px, 5vw, 58px);
+      color: #fffefa;
+      background: var(--forest-dark);
+    }
+
+    .about-copy .eyebrow { color: #e9f3c3; }
+    .about-copy .eyebrow::before { background: var(--lime); box-shadow: 0 0 0 5px rgba(217,240,107,.13); }
+
+    h1 {
+      max-width: 740px;
+      margin: 48px 0 22px;
+      font-size: clamp(54px, 8vw, 100px);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+    }
+
+    h1 em { color: var(--lime); font-family: Georgia, serif; font-weight: 400; }
+
+    .lead { max-width: 660px; margin: 0; color: rgba(255,254,250,.7); font-size: 18px; line-height: 1.9; }
+    .about-sign { margin-top: 42px; color: rgba(255,254,250,.5); font-family: Georgia, serif; font-size: 14px; font-style: italic; }
+
+    .quote-card {
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      background: #e9e6dc;
+    }
+
+    .quote-card img {
+      width: 100%;
+      min-height: 340px;
+      flex: 1;
+      object-fit: cover;
+      border-radius: 20px;
+      filter: saturate(.75) contrast(1.02);
+    }
+
+    .quote-meta { padding: 22px 10px 10px; }
+    .quote-meta strong { display: block; font-family: Georgia, "Songti SC", serif; font-size: 22px; }
+    .quote-meta span { color: var(--muted); font-size: 13px; }
+
     .about-grid {
       display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
-      gap: 22px;
-      margin-top: 8px;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 70px;
+      margin: 96px 0;
+      padding: 0 clamp(8px, 3vw, 34px);
     }
 
-    .profile-card,
-    .content-card {
-      padding: 30px;
+    .about-aside { position: sticky; top: 114px; align-self: start; }
+    .about-aside h2 { margin: 10px 0 18px; font-size: 42px; line-height: 1.08; letter-spacing: -.05em; }
+    .about-aside p { color: var(--muted); line-height: 1.9; }
+
+    .contact-list { display: grid; gap: 10px; margin-top: 26px; }
+    .contact-list a, .contact-list span { padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 760; }
+    .contact-list a:hover { color: var(--orange); }
+
+    .story { display: grid; gap: 56px; }
+    .story-block h3 { margin: 0 0 16px; font-size: clamp(28px, 4vw, 42px); line-height: 1.15; letter-spacing: -.045em; }
+    .story-block p { margin: 0; color: var(--muted); font-size: 17px; line-height: 2; }
+
+    .timeline { display: grid; margin-top: 26px; border-top: 1px solid var(--line); }
+    .timeline-item { display: grid; grid-template-columns: 86px 1fr; gap: 24px; padding: 25px 0; border-bottom: 1px solid var(--line); }
+    .timeline-year { color: var(--orange); font-family: Georgia, serif; font-style: italic; }
+    .timeline-item h4 { margin: 0 0 7px; font-size: 20px; }
+    .timeline-item p { font-size: 15px; line-height: 1.8; }
+
+    .principles { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .principles span { padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.45); font-size: 13px; font-weight: 730; }
+
+    @media (max-width: 900px) {
+      .about-hero, .about-grid { grid-template-columns: 1fr; }
+      .about-grid { gap: 52px; margin: 72px 0; }
+      .about-aside { position: static; }
     }
 
-    .avatar-ring {
-      width: 124px;
-      height: 124px;
-      padding: 4px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff5fa2, #ffd84d, #64eaff, #8b7cff);
-      box-shadow: 0 18px 40px rgba(255, 95, 162, 0.22);
-      margin-bottom: 16px;
-    }
-
-    .avatar {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      display: block;
-      object-fit: cover;
-      background: #161b37;
-    }
-
-    .name {
-      font-size: 38px;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .role {
-      color: #fff0c7;
-      font-weight: 800;
-      margin-bottom: 12px;
-      line-height: 1.8;
-    }
-
-    .intro {
-      color: var(--muted);
-      line-height: 1.95;
-      font-size: 17px;
-    }
-
-    .contact-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .contact-item {
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.05);
-      font-weight: 800;
-      color: #fff2fb;
-    }
-
-    .contact-item a {
-      color: #fff0c7;
-      word-break: break-all;
-    }
-
-    .badge-list {
-      margin-top: 18px;
-    }
-
-    .hero-card {
-      padding: 34px;
-      margin-bottom: 22px;
-    }
-
-    .hero-title {
-      margin: 16px 0 10px;
-      font-size: clamp(42px, 7vw, 72px);
-      line-height: 1;
-    }
-
-    .hero-title span {
-      color: #ffd84d;
-    }
-
-    .hero-text {
-      max-width: 760px;
-      color: var(--muted);
-      line-height: 1.95;
-      font-size: 17px;
-    }
-
-    .content-stack {
-      display: grid;
-      gap: 22px;
-    }
-
-    .content-card h2 {
-      margin: 0 0 12px;
-      font-size: 28px;
-    }
-
-    .content-card p,
-    .content-card li {
-      color: var(--muted);
-      line-height: 1.95;
-      font-size: 16px;
-    }
-
-    .content-card ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 14px;
-    }
-
-    .timeline-item {
-      position: relative;
-      padding: 18px 18px 18px 22px;
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: 10px;
-      top: 22px;
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #ff5fa2, #64eaff);
-      box-shadow: 0 0 14px rgba(100, 234, 255, 0.6);
-    }
-
-    .timeline-item h3 {
-      margin: 0 0 8px;
-      font-size: 20px;
-    }
-
-    .timeline-item p {
-      margin: 0;
-    }
-
-    @media (max-width: 960px) {
-      .about-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-card,
-      .profile-card,
-      .content-card {
-        padding: 24px;
-      }
+    @media (max-width: 600px) {
+      .about-copy { min-height: 520px; padding: 28px 24px; }
+      .quote-card img { min-height: 300px; }
+      .timeline-item { grid-template-columns: 1fr; gap: 6px; }
     }
   </style>
 
-  <section class="panel hero-card">
-    <div class="pill">About Page · 同一套视觉系统</div>
-    <h1 class="hero-title">
-      关于 <span>{site.nickname}</span>
-    </h1>
-    <p class="hero-text">
-      我正在学习前端、建站和页面设计，也在练习怎么把一个想法慢慢做成真正有质感的作品。
-      这个博客会记录我从新手开始，一点一点把自己的网站做漂亮、做完整的过程。
-    </p>
+  <section class="about-hero">
+    <article class="panel about-copy">
+      <div>
+        <span class="eyebrow">About me</span>
+        <h1>你好，<br />我是 <em>{site.nickname}</em>。</h1>
+        <p class="lead">我是一名前端学习者，也在学习如何观察、组织和表达。这个网站不是完成品，而是我不断成长的现场。</p>
+      </div>
+      <div class="about-sign">Learning in public · Building with care</div>
+    </article>
+
+    <aside class="panel quote-card">
+      <img src={portrait} alt="花枝与手写文字：我也只能不停地走下去" />
+      <div class="quote-meta">
+        <strong>“去做，答案才会出现。”</strong>
+        <span>给正在路上的自己</span>
+      </div>
+    </aside>
   </section>
 
   <section class="about-grid">
-    <div class="panel profile-card">
-      <div class="avatar-ring">
-        <img class="avatar" src={avatarUrl} alt={`${site.nickname} 的头像`} />
-      </div>
-
-      <div class="name">{site.nickname}</div>
-      <div class="role">{site.role}</div>
-      <div class="intro">{site.intro}</div>
-
+    <aside class="about-aside">
+      <span class="eyebrow">Profile</span>
+      <h2>一个正在形成中的创作者。</h2>
+      <p>不急着定义终点。先认真对待每一次练习，让能力、审美和表达在作品里慢慢汇合。</p>
       <div class="contact-list">
-        <div class="contact-item">
-          📮 邮箱：<a href={`mailto:${site.email}`}>{site.email}</a>
-        </div>
-        <div class="contact-item">
-          💻 GitHub：
-          <a href={site.github} target="_blank" rel="noreferrer">{site.github}</a>
-        </div>
-        <div class="contact-item">📍 所在地：{site.location}</div>
+        <a href={`mailto:${site.email}`}>Email ↗</a>
+        <a href={site.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+        <span>{site.location} · {site.status}</span>
       </div>
+    </aside>
 
-      <div class="chip-list badge-list">
-        {principles.map((item) => <span class="chip">{item}</span>)}
-      </div>
-    </div>
-
-    <div class="content-stack">
-      <article class="panel content-card">
-        <h2>我现在在做什么</h2>
-        <p>
-          我正在练 Git、GitHub、Astro、页面布局和样式设计。
-          我不只是想把博客搭出来，我还想把它做成一个有风格、有人味、能代表我自己的空间。
-        </p>
+    <div class="story">
+      <article class="story-block">
+        <h3>我在做什么</h3>
+        <p>目前，我在练习 Git、GitHub、Astro、HTML、CSS 和响应式设计。我希望自己不止能实现功能，也能理解内容层级、阅读节奏和视觉气质，让每个页面都更完整、更像一件作品。</p>
+        <div class="principles">
+          {site.tags.map((tag) => <span>{tag}</span>)}
+        </div>
       </article>
 
-      <article class="panel content-card">
-        <h2>这个博客会写什么</h2>
-        <ul>
-          <li>前端学习笔记</li>
-          <li>搭建博客时踩过的坑</li>
-          <li>页面美化与风格尝试</li>
-          <li>生活想法和成长记录</li>
-        </ul>
+      <article class="story-block">
+        <h3>为什么建立这个博客</h3>
+        <p>因为成长需要痕迹。社交平台上的内容会被时间线带走，而个人网站可以按照自己的方式沉淀。我会在这里记录学习笔记、建站过程、页面尝试，以及那些从不会到会一点的真实瞬间。</p>
       </article>
 
-      <article class="panel content-card">
-        <h2>我的成长路线</h2>
+      <article class="story-block">
+        <h3>我的成长路线</h3>
         <div class="timeline">
-          {
-            timeline.map((item) => (
-              <div class="timeline-item">
-                <h3>{item.title}</h3>
+          {timeline.map((item) => (
+            <div class="timeline-item">
+              <span class="timeline-year">{item.year}</span>
+              <div>
+                <h4>{item.title}</h4>
                 <p>{item.text}</p>
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       </article>
     </div>
