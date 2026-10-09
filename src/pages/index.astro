@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { site } from '../data/site';
+import JournalFeed from '../components/JournalFeed.astro';
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 
@@ -33,6 +34,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
       <div class="essay-image"><img src={`${base}journal.jpg`} alt="桌上的笔记本与手写记录" width="1000" height="670" loading="lazy" /></div>
       <div class="essay-copy"><div class="essay-meta"><span>01 / 建站手记</span><time datetime="2026-04-03">APR 03, 2026</time></div><h3>我的第一篇博客</h3><p>从“我想做点什么”，到“我真的做出来了”。<br />一个不太熟练、却认真开始的故事。</p><span class="text-link">读这篇手记 <span aria-hidden="true">↗</span></span></div>
     </a>
+    <JournalFeed compact />
   </section>
 
   <section class="margins" aria-labelledby="margins-title">

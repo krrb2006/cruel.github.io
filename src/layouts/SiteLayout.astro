@@ -1,6 +1,8 @@
 ---
 import { site } from "../data/site";
 import "../styles/journal.css";
+import "../styles/features.css";
+import Ambient from "../components/Ambient.astro";
 
 interface Props {
   title: string;
@@ -336,7 +338,7 @@ const isPost = Astro.url.pathname.includes("/posts");
         <nav class="nav" aria-label="主导航">
           <a href={base} aria-current={isHome ? "page" : undefined}>首页</a>
           <a href={`${base}about/`} aria-current={isAbout ? "page" : undefined}>关于</a>
-          <a href={`${base}posts/first-post/`} aria-current={isPost ? "page" : undefined}>文章</a>
+          <a href={`${base}journal/`} aria-current={isPost || Astro.url.pathname.includes('/journal') ? "page" : undefined}>手记</a>
           <a class="nav-github" href={site.github} target="_blank" rel="noreferrer">GitHub ↗</a>
         </nav>
       </div>
@@ -351,8 +353,11 @@ const isPost = Astro.url.pathname.includes("/posts");
       <span class="footer-mark" aria-hidden="true">l.</span>
       <span class="footer-links">
         <a href={`mailto:${site.email}`}>Email</a>
+        <a href={`${base}studio/`}>写作台</a>
         <a href={site.github} target="_blank" rel="noreferrer">GitHub</a>
       </span>
     </footer>
+    <a class="studio-mobile-link" href={`${base}studio/`}>进入写作台 ↗</a>
+    <Ambient />
   </body>
 </html>
