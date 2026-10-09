@@ -1,6 +1,9 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import '../styles/features.css';
+import settings from '../data/settings.json';
+import { limits } from '../lib/settings';
+const labels = {blogName:'网站名称',nickname:'你的昵称',headline:'首页主标题',introduction:'首页自我介绍',letterTitle:'欢迎语标题',letterText:'欢迎语正文',footerText:'页脚寄语'};
 ---
 <SiteLayout title="写作台" description="花间来信的私人写作台：编辑文字、上传图片、保存草稿与发布手记。">
   <header class="feature-header"><p class="small-label">YOUR LITTLE WRITING ROOM</p><h1>把此刻，写下来。</h1><p>一张照片，一段文字。认真收藏生活里的微光。</p></header>
@@ -13,6 +16,19 @@ import '../styles/features.css';
     </details>
     <p id="connection-status" role="status">尚未连接。可以先写作、上传图片和保存本机草稿。</p>
   </section>
+  <section class="editor-box" style="margin-bottom:28px">
+    <h2>网站名片 · 自己定义</h2>
+    <p class="muted">修改网站名称与首页介绍。换行会保留；预览不会公开，发布后等待自动部署生效。</p>
+    <form id="settings-form">
+      {Object.entries(limits).map(([key, limit]) => <div>
+        <label for={'setting-' + key}>{labels[key as keyof typeof labels]}（最多 {limit} 字）</label>
+        <textarea id={'setting-' + key} name={key} maxlength={limit} rows={key === 'introduction' || key === 'letterText' ? 4 : 2} required>{settings[key as keyof typeof settings]}</textarea>
+      </div>)}
+      <div class="editor-actions"><button type="button" id="settings-preview" class="quiet">预览网站名片</button><button type="submit">发布网站设置</button></div>
+    </form>
+    <p id="settings-status" role="status">设置草稿自动保存在本机，不包含 GitHub 令牌。</p>
+  </section>
+  <dialog id="settings-dialog" class="reading-dialog"><button class="dialog-close" autofocus>关闭预览 ×</button><div id="settings-preview-content"></div></dialog>
   <div class="studio-grid">
     <section class="editor-box">
       <h2>写一封新的来信</h2>

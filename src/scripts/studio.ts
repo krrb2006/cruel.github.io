@@ -1,5 +1,7 @@
 import { connect, publish, upsert, validateJournal, EMPTY, type Entry, type Journal, REPO } from '../lib/journal';
 import { element, renderEntry } from './entry-view';
+import defaults from '../data/settings.json';
+import { limits, validateSettings, readSettings, publishSettings, type Settings } from '../lib/settings';
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const title = $<HTMLInputElement>('entry-title'), text = $<HTMLTextAreaElement>('entry-text'), tags = $<HTMLInputElement>('entry-tags');
 const fileInput = $<HTMLInputElement>('entry-photos');
@@ -78,6 +80,7 @@ $('new-entry').onclick = () => { if (dirty && !saveDraft()) return; reset(); sta
 window.addEventListener('beforeunload', event => { if (dirty || busy || imageBusy) event.preventDefault(); });
 function setBusy(value: boolean) {
   busy = value;
+  document.querySelectorAll<HTMLButtonElement | HTMLTextAreaElement>('#settings-form button, #settings-form textarea').forEach(el => el.disabled = value);
   document.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLTextAreaElement>('.studio-grid button, .studio-grid input, .studio-grid textarea, #disconnect, #connect-form button').forEach(el => el.disabled = value);
 }
 $('connect-form').onsubmit = async event => {
@@ -87,6 +90,7 @@ $('connect-form').onsubmit = async event => {
   try {
     const result = await connect(candidate); token = candidate; sha = result.sha; remote = result.journal;
     status('已连接站主 krrb2006。令牌仅在当前页面内存中，刷新后需重新连接。', false, true);
+    await loadRemoteSettings();
     $<HTMLDetailsElement>('connection-details').open = false; renderLists();
   } catch (error) { token = ''; sha = ''; status(error instanceof Error ? error.message : '连接失败。', true, true); }
   finally { setBusy(false); }
@@ -176,4 +180,58 @@ $<HTMLInputElement>('import-drafts').onchange = async event => {
     localStorage.setItem(KEY,JSON.stringify(merged)); drafts = merged; renderLists(); status('已导入备份。同编号的现有草稿未覆盖。');
   } catch (error) { status(error instanceof Error ? error.message : '导入失败。',true); }
   finally { input.value = ''; }
+};
+
+const SETTINGS_KEY = 'flower-site-settings-v1';
+let settingsSha = '', settingsBase: Settings = validateSettings(defaults), settingsDirty = false;
+const settingsStatus = $('settings-status');
+function formSettings() {
+  return validateSettings(Object.fromEntries(Object.keys(limits).map(key => [key, $<HTMLTextAreaElement>('setting-' + key).value])));
+}
+function fillSettings(value: Settings) {
+  for (const key of Object.keys(limits)) $<HTMLTextAreaElement>('setting-' + key).value = value[key as keyof Settings];
+}
+async function loadRemoteSettings() {
+  try {
+    const latest = await readSettings(token); settingsSha = latest.sha; settingsBase = latest.settings;
+    if (!settingsDirty) fillSettings(latest.settings);
+    settingsStatus.textContent = settingsDirty ? '已读取远端版本，本机设置草稿保留。' : '已载入最新网站设置。';
+  } catch (error) { settingsSha = ''; settingsStatus.textContent = '网站设置读取失败：' + (error instanceof Error ? error.message : '请重试连接'); }
+}
+try {
+  const saved = localStorage.getItem(SETTINGS_KEY);
+  if (saved) { fillSettings(validateSettings(JSON.parse(saved))); settingsDirty = true; }
+} catch { settingsStatus.textContent = '本机设置草稿无法读取，原数据未修改。'; }
+$('settings-form').addEventListener('input', () => {
+  settingsDirty = true;
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(formSettings())); settingsStatus.textContent = '设置草稿已保存到本机，尚未公开。'; }
+  catch { settingsStatus.textContent = '设置未保存，请完整填写并检查浏览器存储空间。'; }
+});
+const settingsDialog = $<HTMLDialogElement>('settings-dialog');
+settingsDialog.querySelector('button')!.onclick = () => settingsDialog.close();
+$('settings-preview').onclick = () => {
+  try {
+    const value = formSettings(), target = $('settings-preview-content'); target.replaceChildren();
+    for (const [key, tag] of [['blogName','h2'],['nickname','p'],['headline','h1'],['introduction','p'],['letterTitle','h2'],['letterText','p'],['footerText','p']]) {
+      const node = element(tag as keyof HTMLElementTagNameMap, value[key as keyof Settings]); node.style.whiteSpace = 'pre-line'; node.style.overflowWrap = 'anywhere'; target.append(node);
+    }
+    settingsDialog.showModal();
+  } catch (error) { settingsStatus.textContent = error instanceof Error ? error.message : '请检查设置。'; }
+};
+$('settings-form').onsubmit = async event => {
+  event.preventDefault(); if (busy || imageBusy) return;
+  if (!token || !settingsSha) { settingsStatus.textContent = '请先连接 GitHub，读取网站设置后发布。'; $<HTMLDetailsElement>('connection-details').open = true; return; }
+  let value: Settings;
+  try { value = formSettings(); } catch (error) { settingsStatus.textContent = String(error); return; }
+  if (!confirm('公开更新网站名称和首页介绍？部署完成后所有访客可见。')) return;
+  setBusy(true); settingsStatus.textContent = '正在发布网站设置…';
+  try {
+    const latest = await readSettings(token);
+    if (JSON.stringify(latest.settings) !== JSON.stringify(settingsBase)) throw new Error('远端设置已改变。请重新连接，核对最新内容后再发布，本机草稿保留。');
+    const result = await publishSettings(value, latest.sha, token);
+    settingsSha = result.content.sha; settingsBase = value; settingsDirty = false;
+    try { localStorage.removeItem(SETTINGS_KEY); } catch { /* Publishing succeeds independently of local storage. */ }
+    settingsStatus.textContent = '网站设置已提交，等待自动部署完成后生效。刷新首页即可看到更新。';
+  } catch (error) { settingsStatus.textContent = (error instanceof Error ? error.message : '网络异常') + '；请检查仓库发布进度，本机草稿保留。'; }
+  finally { setBusy(false); }
 };

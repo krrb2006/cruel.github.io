@@ -349,7 +349,7 @@ const isPost = Astro.url.pathname.includes("/posts");
     </main>
 
     <footer class="footer page-shell">
-      <span>© {new Date().getFullYear()} {site.nickname} · 花有花期，人有自己的节奏</span>
+      <span>© {new Date().getFullYear()} {site.nickname} · {site.footerText}</span>
       <span class="footer-mark" aria-hidden="true">l.</span>
       <span class="footer-links">
         <a href={`mailto:${site.email}`}>Email</a>

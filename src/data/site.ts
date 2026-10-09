@@ -1,6 +1,5 @@
+import settings from './settings.json';
 export const site = {
-  blogName: "花间来信",
-  nickname: "lkr",
   initials: "L",
   role: "前端学习者 · 正在把审美和代码练到同一水平",
   motto: "把想法做成会发光的网页",
@@ -14,4 +13,5 @@ export const site = {
   tags: ["Astro", "GitHub Pages", "UI 设计", "前端学习", "创意网页"],
   location: "中国",
   status: "持续更新中",
+  ...settings,
 };

@@ -37,7 +37,7 @@ export function decodeContent(text: string): string {
   return new TextDecoder().decode(Uint8Array.from(atob(text.replace(/\s/g, '')), c => c.charCodeAt(0)));
 }
 type Fetcher = typeof fetch;
-async function request(path: string, token: string, init: RequestInit = {}, fetcher: Fetcher = fetch) {
+export async function request(path: string, token: string, init: RequestInit = {}, fetcher: Fetcher = fetch) {
   const response = await fetcher('https://api.github.com' + path, {
     ...init, headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token,
       'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(30000)
