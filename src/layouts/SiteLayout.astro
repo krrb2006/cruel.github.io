@@ -2,6 +2,7 @@
 import { site } from "../data/site";
 import "../styles/journal.css";
 import "../styles/features.css";
+import "../styles/exhibition.css";
 import Ambient from "../components/Ambient.astro";
 
 interface Props {
@@ -339,7 +340,8 @@ const isPost = Astro.url.pathname.includes("/posts");
           <a href={base} aria-current={isHome ? "page" : undefined}>首页</a>
           <a href={`${base}about/`} aria-current={isAbout ? "page" : undefined}>关于</a>
           <a href={`${base}journal/`} aria-current={isPost || Astro.url.pathname.includes('/journal') ? "page" : undefined}>手记</a>
-          <a class="nav-github" href={site.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a href={base + 'projects/'} aria-current={Astro.url.pathname.includes('/projects') ? 'page' : undefined}>作品</a>
+          <a href={base + 'playroom/'} aria-current={Astro.url.pathname.includes('/playroom') ? 'page' : undefined}>小屋</a>
         </nav>
       </div>
     </header>

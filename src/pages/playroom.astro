@@ -1,0 +1,16 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+<SiteLayout title="秘密小屋" description="星星、专注钟和写给未来的自己，一间可以慢慢停留的数字小屋。">
+  <header class="feature-header"><p class="small-label">THE SECRET ROOM / STAY A LITTLE LONGER</p><h1>在这里，浪费一点美好的时间。</h1><p>不是每个点击都要抵达目的地。有些只是为了遇见一颗星星。</p></header>
+  <div class="play-grid playroom">
+    <section class="play-card"><p class="small-label">01 / A SMALL CONSTELLATION</p><h2>收集夜空的来信</h2><p>点亮五颗星星，会有一封只写给路过者的信。</p><div class="stars">{['勇气','好奇','温柔','耐心','自由'].map((name,i) => <button data-star={i} aria-label={'点亮' + name + '星'} aria-pressed="false">✧</button>)}</div><p id="star-status" class="play-status" role="status">还没有星星被点亮。</p><div id="secret-letter" class="secret-letter" hidden>亲爱的路过者：
+你不必成为别人眼里最亮的那颗星。
+愿你始终保留一点好奇，一点不服输，
+和把平凡日子过成自己喜欢的样子的勇气。
+—— 来自这间小屋</div><button id="reset-stars" class="quiet">重新看一次星空</button></section>
+    <section class="play-card"><p class="small-label">02 / A QUIET MOMENT</p><h2>一枚安静的专注钟</h2><label for="focus-minutes">给自己留多久？</label><select id="focus-minutes"><option value="5">5 分钟</option><option value="15">15 分钟</option><option value="25">25 分钟</option></select><div class="orbit-clock"><span id="focus-time" role="timer">05:00</span></div><div class="inline-controls"><button id="focus-start">开始专注</button><button id="focus-reset" class="quiet">重置</button></div><p id="focus-status" class="play-status" role="status">没有提醒音，也没有压力。给眼前的事情一点时间。</p></section>
+    <section class="play-card wide"><p class="small-label">03 / A LETTER TO THE FUTURE</p><h2>写给未来的自己</h2><p>这封信只留在当前浏览器，不上传、不公开。清理浏览器数据会丢失，请导出珍藏。不要在这里保存密码或敏感资料。</p><form id="capsule-form"><label for="capsule-text">你想对未来的自己说什么？</label><textarea id="capsule-text" rows="5" maxlength="2000" required placeholder="亲爱的未来的我……"></textarea><label for="capsule-date">在这一天再打开</label><input id="capsule-date" type="date" required /><div class="editor-actions"><button type="submit">封存这封信</button><button type="button" id="capsule-export" class="quiet">导出本机来信</button></div></form><p id="capsule-status" class="play-status" role="status"></p><div id="capsule-list" class="capsule-list"></div></section>
+  </div>
+  <script>import '../scripts/playroom';</script>
+</SiteLayout>

@@ -2,6 +2,7 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { site } from '../data/site';
 import JournalFeed from '../components/JournalFeed.astro';
+import ProjectGallery from '../components/ProjectGallery.astro';
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 
@@ -12,7 +13,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
       <p class="overline">LET LIFE BLOOM, QUIETLY.</p>
       <h1 id="opening-title" style="white-space:pre-line;overflow-wrap:anywhere">{site.headline}</h1>
       <p class="opening-description" style="white-space:pre-line">{site.introduction}</p>
-      <a class="text-link" href="#journal">翻开我的手记 <span aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#journal">翻开我的手记 <span aria-hidden="true">↗</span></a><a class="room-link" href="#projects">看看我的作品 ↗</a>
       <div class="signature">with love, <i>{site.nickname}</i></div>
     </div>
     <figure class="opening-image">
@@ -37,6 +38,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
     <JournalFeed compact />
   </section>
 
+  <ProjectGallery compact />
   <section class="margins" aria-labelledby="margins-title">
     <div class="margin-intro"><p class="overline">IN THE MARGINS</p><h2 id="margins-title">在生活的<br /><i>留白里。</i></h2><p>允许自己缓慢，<br />也允许自己充满期待。</p></div>
     <div class="margin-note"><span class="note-number">I.</span><h3>学习，让想法有形状</h3><p>从 Git、Astro 到页面设计。每一次小小的完成，都让我更靠近心里想做的作品。</p><span class="note-label">CODE & CURIOSITY</span></div>

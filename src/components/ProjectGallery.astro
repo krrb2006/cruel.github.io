@@ -1,0 +1,28 @@
+---
+import { projects } from '../data/projects';
+const { compact = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+---
+<section class="project-gallery" id="projects" data-project-gallery>
+  <div class="gallery-heading"><div><p class="small-label">SELECTED WORKS / DIGITAL CABINET</p><h2>把想象，做成作品。</h2><p class="muted">故事、工具与网页。不同的尝试，同一种认真。</p></div>{compact && <a href={base + 'projects/'}>进入作品展厅 ↗</a>}</div>
+  {!compact && <div class="project-filters" aria-label="作品分类"><button data-filter="all" aria-pressed="true">全部作品</button>{['叙事游戏','学习工具','个人网站'].map(category => <button data-filter={category} aria-pressed="false">{category}</button>)}</div>}
+  <div class="project-grid">
+    {projects.map((project,index) => <article class={'project-card ' + project.type} data-category={project.category} data-repo={project.slug}>
+      <div class="project-art" aria-label={project.name + '概念示意，非产品截图'}>
+        <span class="art-index">0{index + 1} / CONCEPT STUDY</span>
+        {project.type === 'tomb' ? <><div class="tomb-rings"></div><span class="tomb-word">冢</span><span class="art-caption">记忆之下，仍有回声。</span></> : project.type === 'study' ? <><div class="study-bars">{[38,72,54,88,100].map((height,i) => <span style={'--bar:' + height + '%'}><i>0{i+1}</i></span>)}</div><span class="art-caption">把远处的目标，变成今天的一步。</span></> : <><div class="paper-stack"><span>Dear life,</span><i>collect the little things.</i><b>✳</b></div><span class="art-caption">A quiet place on the internet.</span></>}
+      </div>
+      <div class="project-copy"><p class="project-meta">{project.category} · {project.state}</p><h3>{project.name}</h3><p class="project-english">{project.english}</p><p class="muted">{project.description}</p>
+        <div class="project-flow" aria-label="项目概念流程">{project.steps.map((step,i) => <span><small>0{i+1}</small>{step}</span>)}</div>
+        <ul class="project-features">{project.features.map(feature => <li>{feature}</li>)}</ul>
+        <p class="repo-stats" data-stats>{project.language} · GitHub 实时信息读取中</p>
+        <div class="project-links"><button class="quiet" data-detail={project.slug}>展开作品笔记</button><a href={'https://github.com/krrb2006/' + project.slug} target="_blank" rel="noreferrer">查看源码 ↗</a>{'website' in project && <a href={project.website} target="_blank" rel="noreferrer">访问网页 ↗</a>}<span data-live-link></span></div>
+        <details class="project-detail" id={'detail-' + project.slug}><summary>项目背景与使用说明</summary><p>{project.detail}</p><a href={'https://github.com/krrb2006/' + project.slug + '#readme'} target="_blank" rel="noreferrer">阅读项目 README ↗</a></details>
+      </div>
+    </article>)}
+  </div>
+  <p class="sync-note" role="status" data-sync-status>介绍依据项目 README 整理。概念图为本站原创示意，并非产品截图。动态信息来自公开 GitHub API。</p>
+</section>
+<script>
+  import '../scripts/projects';
+</script>
