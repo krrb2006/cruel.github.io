@@ -8,12 +8,13 @@ const fileInput = $<HTMLInputElement>('entry-photos');
 const KEY = 'flower-journal-drafts-v1';
 let token = '', sha = '', remote: Journal = structuredClone(EMPTY), drafts: Journal = structuredClone(EMPTY);
 let id = crypto.randomUUID() as string, createdAt = new Date().toISOString(), photos: Entry['photos'] = [];
+let articleFormat: Entry['format'] = 'markdown';
 let busy = false, imageBusy = false, dirty = false, timer: ReturnType<typeof setTimeout> | undefined;
 function status(message: string, error = false, connection = false) {
   const node = $(connection ? 'connection-status' : 'editor-status'); node.textContent = message; node.dataset.error = String(error);
 }
 function entry(): Entry {
-  return { id, title: title.value.trim() || '未命名草稿', text: text.value, photos: structuredClone(photos),
+  return { id, format: articleFormat, title: title.value.trim() || '未命名草稿', text: text.value, photos: structuredClone(photos),
     tags: [...new Set(tags.value.split(/[,，]/).map(t => t.trim()).filter(Boolean))], createdAt, updatedAt: new Date().toISOString() };
 }
 function list(target: HTMLElement, items: Entry[], isDraft: boolean) {
@@ -57,20 +58,53 @@ function renderPhotos() {
     caption.setAttribute('aria-label', '照片 ' + (index + 1) + ' 的说明');
     caption.oninput = () => { photos[index].alt = caption.value; changed(); };
     const remove = element('button', '移除这张照片', 'quiet'); remove.type = 'button';
-    remove.onclick = () => { photos.splice(index, 1); renderPhotos(); changed(); };
-    box.append(image, caption, remove); container.append(box);
+    remove.onclick = () => {
+      if (articleFormat === 'markdown') text.value = text.value.replace(/!\[图片\]\(photo:(\d+)\)/g, (marker, number) => Number(number) === index + 1 ? '' : Number(number) > index + 1 ? '![图片](photo:' + (Number(number) - 1) + ')' : marker);
+      photos.splice(index, 1); renderPhotos(); changed();
+    };
+    const insert = element('button', '插入正文', 'quiet'); insert.type = 'button'; insert.onclick = () => insertText('\n\n![图片](photo:' + (index + 1) + ')\n\n');
+    box.append(image, caption, insert, remove); container.append(box);
   });
 }
 function load(item: Entry) {
   clearTimeout(timer); id = item.id; createdAt = item.createdAt; title.value = item.title;
   text.value = item.text; tags.value = item.tags.join(', '); photos = structuredClone(item.photos); dirty = false;
+  articleFormat = item.format; updateCount();
   renderPhotos(); status('已载入“' + item.title + '”。修改后可保存草稿或重新发布。'); title.focus();
 }
 function reset() {
   clearTimeout(timer); id = crypto.randomUUID(); createdAt = new Date().toISOString();
   title.value = ''; text.value = ''; tags.value = ''; photos = []; dirty = false; renderPhotos();
+  articleFormat = 'markdown'; updateCount();
 }
-function changed() { dirty = true; clearTimeout(timer); timer = setTimeout(saveDraft, 1200); }
+function changed() { dirty = true; updateCount(); clearTimeout(timer); timer = setTimeout(saveDraft, 1200); }
+function updateCount() { const count = text.value.replace(/\s/g,'').length; $('word-count').textContent = count + ' 字 · 约 ' + Math.max(1,Math.ceil(count / 400)) + ' 分钟阅读'; }
+function insertText(value: string) {
+  if (busy || imageBusy) return;
+  if (text.value.length - (text.selectionEnd - text.selectionStart) + value.length > 30000) { status('正文不能超过 30,000 字。',true); return; }
+  articleFormat = 'markdown'; text.setRangeText(value,text.selectionStart,text.selectionEnd,'end'); text.focus(); changed();
+}
+document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach(button => button.onclick = () => {
+  const selected = text.value.slice(text.selectionStart,text.selectionEnd);
+  const mode = button.dataset.format;
+  const value = mode === 'bold' ? '**' + (selected || '加粗文字') + '**' : mode === 'italic' ? '*' + (selected || '强调文字') + '*' :
+    mode === 'divider' ? '\n\n---\n\n' : '\n\n' + (mode === 'heading' ? '## ' : mode === 'quote' ? '> ' : '- ') + (selected || '在这里输入内容') + '\n\n';
+  insertText(value);
+});
+$('insert-photo').onclick = () => {if(!busy && !imageBusy) fileInput.click();};
+$('preview-mobile').onclick = () => $('preview-dialog').classList.add('mobile');
+$('preview-desktop').onclick = () => $('preview-dialog').classList.remove('mobile');
+$<HTMLInputElement>('article-import').onchange = async event => {
+  const input = event.target as HTMLInputElement, file = input.files?.[0]; if (!file || busy || imageBusy) return;
+  try {
+    if (!/\.(md|txt)$/i.test(file.name) || file.size > 150000) throw new Error('请选择小于 150KB 的 UTF-8 .md / .txt 文件。');
+    const content = await file.text(); if (content.length > 30000 || !content.trim()) throw new Error('正文不能为空或超过 30,000 字。');
+    if ((title.value || text.value || photos.length) && !confirm('导入为一篇新文章？当前内容会先保存到本机草稿，不会发布。')) return;
+    if (!saveDraft()) return; reset(); title.value = file.name.replace(/\.(md|txt)$/i,'').slice(0,100); text.value = content;
+    articleFormat = /\.md$/i.test(file.name) ? 'markdown' : undefined; changed(); status('文章已导入为新草稿。请检查排版并单独上传图片。');
+  } catch (error) {status(error instanceof Error ? error.message : '导入失败。',true);}
+  finally {input.value='';}
+};
 try { const raw = localStorage.getItem(KEY); if (raw) drafts = validateJournal(JSON.parse(raw)); }
 catch { status('无法读取本机草稿。原存储内容未被修改，可尝试导出备份。', true); }
 renderLists();
@@ -80,6 +114,7 @@ $('new-entry').onclick = () => { if (dirty && !saveDraft()) return; reset(); sta
 window.addEventListener('beforeunload', event => { if (dirty || busy || imageBusy) event.preventDefault(); });
 function setBusy(value: boolean) {
   busy = value;
+  document.querySelectorAll<HTMLButtonElement>('.studio-topbar button').forEach(el => el.disabled = value);
   document.querySelectorAll<HTMLButtonElement | HTMLTextAreaElement>('#settings-form button, #settings-form textarea').forEach(el => el.disabled = value);
   document.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLTextAreaElement>('.studio-grid button, .studio-grid input, .studio-grid textarea, #disconnect, #connect-form button').forEach(el => el.disabled = value);
 }

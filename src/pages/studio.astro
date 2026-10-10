@@ -1,14 +1,15 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import '../styles/features.css';
+import '../styles/studio.css';
 import settings from '../data/settings.json';
 import { limits } from '../lib/settings';
 const labels = {blogName:'网站名称',nickname:'你的昵称',headline:'首页主标题',introduction:'首页自我介绍',letterTitle:'欢迎语标题',letterText:'欢迎语正文',footerText:'页脚寄语'};
 ---
 <SiteLayout title="写作台" description="花间来信的私人写作台：编辑文字、上传图片、保存草稿与发布手记。">
-  <header class="feature-header"><p class="small-label">YOUR LITTLE WRITING ROOM</p><h1>把此刻，写下来。</h1><p>一张照片，一段文字。认真收藏生活里的微光。</p></header>
+  <header class="studio-heading"><div><p class="small-label">CONTENT STUDIO</p><h1>图文创作</h1><p>像写一篇文章一样，认真记录生活。</p></div><a href="../journal/" class="subtle-link">查看公开文章 ↗</a></header>
   <section class="connection">
-    <details id="connection-details" open>
+    <details id="connection-details">
       <summary>连接 GitHub，公开发布手记</summary>
       <p>文字和图片将保存到你的公开仓库，发布后所有访客可见。令牌只在当前页面内存中使用，刷新或断开即清除；不保存到草稿。</p>
       <ol><li>在 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">GitHub 创建 Fine-grained token ↗</a>，设置一个较短的有效期。</li><li>Repository access 仅选择 <code>cruel.github.io</code>。</li><li>Repository permissions → Contents 选择 Read and write。复制令牌到下方；不要发到聊天或写进文章。</li></ol>
@@ -17,7 +18,7 @@ const labels = {blogName:'网站名称',nickname:'你的昵称',headline:'首页
     <p id="connection-status" role="status">尚未连接。可以先写作、上传图片和保存本机草稿。</p>
   </section>
   <section class="editor-box" style="margin-bottom:28px">
-    <h2>网站名片 · 自己定义</h2>
+    <details><summary>网站名片 · 自己定义</summary>
     <p class="muted">修改网站名称与首页介绍。换行会保留；预览不会公开，发布后等待自动部署生效。</p>
     <form id="settings-form">
       {Object.entries(limits).map(([key, limit]) => <div>
@@ -26,28 +27,27 @@ const labels = {blogName:'网站名称',nickname:'你的昵称',headline:'首页
       </div>)}
       <div class="editor-actions"><button type="button" id="settings-preview" class="quiet">预览网站名片</button><button type="submit">发布网站设置</button></div>
     </form>
-    <p id="settings-status" role="status">设置草稿自动保存在本机，不包含 GitHub 令牌。</p>
+    <p id="settings-status" role="status">设置草稿自动保存在本机，不包含 GitHub 令牌。</p></details>
   </section>
   <dialog id="settings-dialog" class="reading-dialog"><button class="dialog-close" autofocus>关闭预览 ×</button><div id="settings-preview-content"></div></dialog>
-  <div class="studio-grid">
-    <section class="editor-box">
-      <h2>写一封新的来信</h2>
+  <div class="studio-topbar"><span id="word-count" role="status">0 字 · 约 1 分钟阅读</span><div class="inline-controls"><button type="button" id="save-draft" class="quiet">保存草稿</button><button type="button" id="preview-entry" class="quiet">预览文章</button><button type="submit" form="entry-form" id="publish-entry">发布文章</button></div></div>
+  <div class="studio-grid modern-studio">
+    <section class="editor-box article-paper">
       <form id="entry-form">
-        <label for="entry-title">标题</label><input id="entry-title" maxlength="100" placeholder="给今天取一个名字" required />
-        <label for="entry-text">正文</label><textarea id="entry-text" rows="12" maxlength="30000" placeholder="从一句话开始……纯文字与换行会原样保留。" required></textarea>
-        <label for="entry-tags">标签（用逗号分隔，最多 8 个）</label><input id="entry-tags" maxlength="180" placeholder="日常, 学习, 小确幸" />
-        <label for="entry-photos">照片（最多 4 张，单张原图不超过 15MB）</label>
-        <div id="drop-zone" class="drop-zone"><input id="entry-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple /><p>点击选择或拖入 JPG、PNG、WebP。自动压缩图片并去除原始定位元数据。</p></div>
-        <div id="photo-list" class="photo-list"></div>
-        <div class="editor-actions"><button type="button" id="save-draft" class="quiet">保存本机草稿</button><button type="button" id="preview-entry" class="quiet">预览</button><button type="submit" id="publish-entry">发布到网站</button></div>
+        <label for="entry-title">文章标题</label><input id="entry-title" maxlength="100" placeholder="请在这里输入标题" required />
+        <div class="article-toolbar" role="toolbar" aria-label="正文排版工具"><button type="button" class="quiet" data-format="heading">小标题</button><button type="button" class="quiet" data-format="bold">加粗</button><button type="button" class="quiet" data-format="italic">斜体</button><button type="button" class="quiet" data-format="quote">引用</button><button type="button" class="quiet" data-format="list">列表</button><button type="button" class="quiet" data-format="divider">分隔线</button><button type="button" class="quiet" id="insert-photo">上传图片</button></div>
+        <label for="entry-text">文章正文</label><textarea id="entry-text" rows="20" maxlength="30000" placeholder="在这里开始正文……选中文字后使用上方工具排版，点击预览查看效果。" required></textarea>
+        <p class="article-help">轻量 Markdown 编辑：正文显示标记，预览呈现排版。支持正文插图，不执行 HTML 或加载外部图片。</p>
       </form>
       <p id="editor-status" role="status">本机草稿只保存在此浏览器。可导出备份，发布前请确认内容可公开。</p>
     </section>
     <aside class="studio-sidebar">
+      <section class="editor-box"><h2>文章信息与图片素材</h2><label for="entry-tags">标签（逗号分隔，最多 8 个）</label><input id="entry-tags" maxlength="180" placeholder="日常, 学习, 小确幸" /><label for="entry-photos">照片（最多 4 张，单张 ≤15MB）</label><div id="drop-zone" class="drop-zone"><input id="entry-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple /><p>点击上传或拖入照片，自动压缩。第一张作为列表封面。</p></div><div id="photo-list" class="photo-list"></div><p class="muted">上传后点击「插入正文」，放到光标处。未插入的照片显示在文章末尾。</p></section>
+      <section class="editor-box"><h2>导入文章</h2><label for="article-import">上传 TXT / Markdown 文件</label><input id="article-import" type="file" accept=".txt,.md,text/plain,text/markdown" /><p class="muted">支持 UTF-8 纯文字，最多 30,000 字。导入前保存当前草稿；外部图片需另行上传。</p></section>
       <section class="editor-box"><h2>本机草稿</h2><div id="draft-list"></div><div class="inline-controls"><button id="new-entry" class="quiet">新建手记</button><button id="export-drafts" class="quiet">导出备份</button></div><label for="import-drafts">导入草稿备份</label><input id="import-drafts" type="file" accept="application/json,.json" /></section>
       <section class="editor-box"><h2>已发布手记</h2><p class="muted">连接后可编辑已有内容，再次发布更新。</p><div id="published-list"></div><a class="subtle-link" href="../journal/">查看公开手记 ↗</a></section>
     </aside>
   </div>
-  <dialog id="preview-dialog" class="reading-dialog"><button class="dialog-close" autofocus>关闭预览 ×</button><div id="preview-content"></div></dialog>
+  <dialog id="preview-dialog" class="reading-dialog article-preview"><button class="dialog-close" autofocus>关闭预览 ×</button><div class="preview-size"><button type="button" id="preview-desktop" class="quiet">桌面阅读</button><button type="button" id="preview-mobile" class="quiet">手机阅读</button></div><div id="preview-content"></div></dialog>
   <script>import '../scripts/studio';</script>
 </SiteLayout>

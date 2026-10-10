@@ -1,5 +1,6 @@
 export interface Photo { src: string; alt: string }
 export interface Entry {
+  format?: 'markdown';
   id: string; title: string; text: string; tags: string[]; photos: Photo[];
   createdAt: string; updatedAt: string;
 }
@@ -12,6 +13,7 @@ export function validateJournal(value: unknown): Journal {
   if (!data || data.version !== 1 || !Array.isArray(data.entries) || data.entries.length > 300) throw new Error('手记数据格式不正确。');
   const ids = new Set<string>();
   for (const item of data.entries) {
+    if (item.format !== undefined && item.format !== 'markdown') throw new Error('不支持的文章格式。');
     if (!item || typeof item.id !== 'string' || item.id === 'first-post' || !/^[a-zA-Z0-9-]{1,80}$/.test(item.id) || ids.has(item.id)) throw new Error('手记编号重复或无效。');
     ids.add(item.id);
     if (typeof item.title !== 'string' || !item.title.trim() || item.title.length > 100 ||
