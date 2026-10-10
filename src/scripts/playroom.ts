@@ -1,13 +1,40 @@
 const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const stars = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-star]'));
-const names = ['勇气','好奇','温柔','耐心','自由'];
-stars.forEach((star,i) => star.onclick = () => {
-  const on = star.getAttribute('aria-pressed') !== 'true'; star.setAttribute('aria-pressed',String(on)); star.textContent = on ? '✦' : '✧';
-  const count = stars.filter(item => item.getAttribute('aria-pressed') === 'true').length;
-  byId('star-status').textContent = names[i] + '星' + (on ? '已点亮' : '暂时休息') + ' · ' + count + ' / 5';
-  byId('secret-letter').hidden = count !== 5;
+const STAR_KEY = 'flower-project-stars-v1';
+const visited = new Set<string>(), confirmed = new Set<string>();
+try {
+  const saved = JSON.parse(localStorage.getItem(STAR_KEY) || '{}');
+  for (const star of stars) {
+    const slug = star.dataset.star!;
+    if (Array.isArray(saved.visited) && saved.visited.includes(slug)) visited.add(slug);
+    if (Array.isArray(saved.confirmed) && saved.confirmed.includes(slug)) { confirmed.add(slug); visited.add(slug); }
+  }
+} catch { /* Corrupt or unavailable storage does not prevent the interaction. */ }
+function renderStars(message = '') {
+  stars.forEach(star => {
+    const on = confirmed.has(star.dataset.star!);
+    star.disabled = !visited.has(star.dataset.star!);
+    star.setAttribute('aria-pressed',String(on));
+    star.textContent = on ? '已自行确认 · 点击取消点亮' : '我已 Star，点亮这颗星';
+    star.closest('.work-star')!.querySelector('[data-star-symbol]')!.textContent = on ? '✦' : '✧';
+  });
+  byId('star-status').textContent = message + '已自行确认 ' + confirmed.size + ' / ' + stars.length + ' 颗作品星（未验证 GitHub）。';
+  byId('secret-letter').hidden = confirmed.size !== stars.length;
+}
+function saveStars() {
+  try { localStorage.setItem(STAR_KEY,JSON.stringify({visited:[...visited],confirmed:[...confirmed]})); return ''; }
+  catch { return '无法保存到本机，本次进度仅在当前页面有效。'; }
+}
+document.querySelectorAll<HTMLAnchorElement>('[data-star-visit]').forEach(link => link.addEventListener('click',() => {
+  visited.add(link.dataset.starVisit!); renderStars('请在 GitHub 手动点 Star，回来后自行确认。' + saveStars());
+}));
+stars.forEach(star => star.onclick = () => {
+  const slug = star.dataset.star!; if (!visited.has(slug)) return;
+  if (confirmed.has(slug)) confirmed.delete(slug); else confirmed.add(slug);
+  renderStars(saveStars());
 });
-byId('reset-stars').onclick = () => { stars.forEach(star => {star.setAttribute('aria-pressed','false');star.textContent='✧';});byId('secret-letter').hidden=true;byId('star-status').textContent='星空焕然一新。'; };
+byId('reset-stars').onclick = () => {visited.clear();confirmed.clear();renderStars('本机进度已重置，不影响 GitHub Star。' + saveStars());};
+renderStars();
 let remaining = 300, deadline = 0, running = false, interval: ReturnType<typeof setInterval> | undefined;
 const minutes = byId<HTMLSelectElement>('focus-minutes');
 function draw() { byId('focus-time').textContent = String(Math.floor(remaining / 60)).padStart(2,'0') + ':' + String(remaining % 60).padStart(2,'0'); }
